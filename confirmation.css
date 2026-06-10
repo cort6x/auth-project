@@ -1,0 +1,388 @@
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F4F3F3;
+            color: #333;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F4F3F3;
+    color: #333;
+}
+
+/* === ШАПКА САЙТА === */
+.site-header {
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Выравнивание по левому краю */
+    gap: 40px;
+}
+
+/* Логотип */
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #38938B;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+    opacity: 0.85;
+}
+
+/* Навигация */
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #444;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+/* Эффект при наведении */
+.nav-link:hover {
+    color: #38938B;
+    background-color: #F4F3F3;
+}
+
+/* Активная страница (добавьте класс active к нужной ссылке в HTML) */
+.nav-link.active {
+    color: #FFFFFF;
+    background-color: #38938B;
+    font-weight: 600;
+}
+
+.nav-link.active:hover {
+    background-color: #2e7a73; /* Чуть темнее при наведении на активную */
+}
+
+/* Адаптивность для мобильных устройств (опционально) */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 20px;
+        gap: 15px;
+    }
+    
+    .main-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .nav-link {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+}
+        .navbar {
+            background: #FFFFFF;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #38938B;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            background: #38938B;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: scaleIn 0.5s ease;
+        }
+        
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .success-icon svg {
+            width: 60px;
+            height: 60px;
+            fill: #FFFFFF;
+        }
+        
+        .success-title {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #222;
+        }
+        
+        .success-message {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .confirmation-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .booking-number {
+            background: #F4F3F3;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .booking-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .booking-code {
+            font-size: 32px;
+            font-weight: 700;
+            color: #38938B;
+            letter-spacing: 2px;
+        }
+        
+        .booking-details {
+            margin-bottom: 30px;
+        }
+        
+        .detail-row {
+            display: flex;
+            padding: 15px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            width: 150px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .detail-value {
+            flex: 1;
+            color: #333;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #38938B;
+            color: #FFFFFF;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: #FFFFFF;
+            color: #38938B;
+            border: 2px solid #38938B;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #38938B;
+            border: 2px solid #38938B;
+        }
+        
+        .btn-secondary:hover {
+            background: #38938B;
+            color: #FFFFFF;
+        }
+        
+        .info-box {
+            background: #F4F3F3;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .info-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        
+        .info-text {
+            color: #666;
+            line-height: 1.6;
+        }
+.page-head {
+    max-width: 1200px;
+    margin: 24px auto 0;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #38938B;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.bookings-list {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 20px;
+    display: grid;
+    gap: 16px;
+}
+
+.booking-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    border: 1px solid rgba(56,147,139,0.12);
+}
+
+.booking-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.booking-code {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 6px;
+}
+
+.booking-hotel {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+}
+
+.booking-status {
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    height: fit-content;
+}
+
+.booking-status.pending {
+    background: #fff6dd;
+    color: #a37400;
+}
+
+.booking-status.paid {
+    background: #e9faf3;
+    color: #1f7a57;
+}
+
+.booking-meta {
+    display: grid;
+    gap: 8px;
+    color: #444;
+}
+
+.booking-meta span {
+    color: #777;
+    margin-right: 6px;
+}
+
+.empty-state {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+    color: #777;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}

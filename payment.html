@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата бронирования - Свой турист</title>
+    <link rel="stylesheet" href="payment.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <header class="site-header">
+    <div class="header-container">
+        <a href="index.html" class="logo">Свой турист</a>  
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Главная</a>
+            <a href="search-results.html" class="nav-link">Поиск</a>
+            <a href="payment.html" class="nav-link">Оплата</a>
+            <a href="confirmation.html" class="nav-link">Бронирования</a>
+            <a href="destinations.html" class="nav-link">Каталог</a>
+            <button type="button" class="nav-link auth-nav-btn">Войти</button>
+        </nav>
+    </div>
+</header>
+    <nav class="navbar">
+        <div class="logo">Свой турист</div>
+        <div style="color: #38938B; font-weight: 600;">Безопасная оплата</div>
+    </nav>
+    
+    <div class="container">
+        <h1 class="page-title">Оплата бронирования</h1>
+        
+        <div class="payment-card">
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span class="summary-label">Отель:</span>
+                    <span class="summary-value">Occidental Punta Cana</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Даты:</span>
+                    <span class="summary-value">20.01.2025 - 27.01.2025 (7 ночей)</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Гости:</span>
+                    <span class="summary-value">2 взрослых</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Номер:</span>
+                    <span class="summary-value">Deluxe Ocean View</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Итого к оплате:</span>
+                    <span class="total-amount">87 500 ₽</span>
+                </div>
+            </div>
+            
+            <div class="card-preview">
+                <div class="card-chip"></div>
+                <div class="card-number" id="cardNumberDisplay">**** **** **** ****</div>
+                <div class="card-details">
+                    <div class="card-holder" id="cardHolderDisplay">CARD HOLDER</div>
+                    <div class="card-expiry" id="cardExpiryDisplay">MM/YY</div>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3 class="method-title">Способ оплаты</h3>
+                <div class="payment-options">
+                    <div class="payment-option selected" onclick="selectPayment(this)">
+                        <div class="payment-name">Банковская карта</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment(this)">
+                        <div class="payment-name">Apple Pay</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment(this)">
+                        <div class="payment-name">Банковский перевод</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Данные карты</h3>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label class="form-label">Номер карты</label>
+                    <input type="text" class="form-input" placeholder="0000 0000 0000 0000" maxlength="19" id="cardNumber" oninput="updateCardDisplay()">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Срок действия</label>
+                        <input type="text" class="form-input" placeholder="MM/YY" maxlength="5" id="cardExpiry" oninput="updateCardDisplay()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">CVV/CVC</label>
+                        <input type="text" class="form-input" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Имя владельца карты</label>
+                    <input type="text" class="form-input" placeholder="IVAN IVANOV" id="cardHolder" oninput="updateCardDisplay()">
+                </div>
+            </div>
+            
+            <div class="secure-badge">
+                <span>Ваши данные защищены</span>
+            </div>
+            
+            <button class="btn-pay booking-pay-btn" onclick="processPayment()">Оплатить</button>
+        </div>
+    </div>
+    
+    <script>
+        function selectPayment(element) {
+            document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+        
+        function updateCardDisplay() {
+            const number = document.getElementById('cardNumber').value;
+            const expiry = document.getElementById('cardExpiry').value;
+            const holder = document.getElementById('cardHolder').value;
+            
+            if (number) {
+                document.getElementById('cardNumberDisplay').textContent = number || '**** **** **** ****';
+            }
+            if (expiry) {
+                document.getElementById('cardExpiryDisplay').textContent = expiry;
+            }
+            if (holder) {
+                document.getElementById('cardHolderDisplay').textContent = holder.toUpperCase();
+            }
+        }
+    </script>
+
+
+
+
+
+<script>
+function getBookingId(){ return new URLSearchParams(location.search).get('bookingId'); }
+let currentBooking=null;
+
+async function loadPayment(){
+  const token=localStorage.getItem('token');
+  if(!token){ location.href='entrance.html'; return; }
+  const id=getBookingId();
+  let booking=null;
+  try{
+    if(id){
+      const res=await fetch('/api/bookings/'+id,{headers:{Authorization:'Bearer '+token}});
+      const data=await res.json();
+      if(res.ok) booking=data.booking;
+    }
+    if(!booking){
+      const res=await fetch('/api/bookings/my',{headers:{Authorization:'Bearer '+token}});
+      const data=await res.json();
+      booking=(data.bookings||[]).find(b=>b.status==='pending')||(data.bookings||[])[0];
+    }
+  }catch(e){}
+  if(!booking){
+    document.querySelector('.container').insertAdjacentHTML('afterbegin',
+      '<p style="text-align:center;color:#b00020;margin:16px 0;">Бронирование не найдено. <a href="hotels.html">Выбрать отель</a></p>');
+    return;
+  }
+  currentBooking=booking;
+  const vals=document.querySelectorAll('.summary-value');
+  if(vals[0]) vals[0].textContent=booking.hotel_name;
+  if(vals[1]) vals[1].textContent=booking.check_in+' — '+booking.check_out+' ('+booking.nights+' ноч.)';
+  if(vals[2]) vals[2].textContent=booking.adults+' взрослых'+(booking.children?(', '+booking.children+' детей'):'');
+  if(vals[3]) vals[3].textContent=booking.booking_code;
+  const total=Number(booking.total_price).toLocaleString('ru-RU')+' ₽';
+  const ta=document.querySelector('.total-amount'); if(ta) ta.textContent=total;
+  const btn=document.querySelector('.booking-pay-btn');
+  if(btn){
+    if(booking.status==='paid'){
+      btn.textContent='Уже оплачено — открыть подтверждение';
+      btn.onclick=()=>location.href='confirmation.html?bookingId='+booking.id;
+    }else{
+      btn.textContent='Оплатить '+total;
+    }
+  }
+}
+
+async function processPayment(){
+  if(!currentBooking){ alert('Бронирование не загружено.'); return; }
+  if(currentBooking.status==='paid'){ location.href='confirmation.html?bookingId='+currentBooking.id; return; }
+  const cardNumber=document.getElementById('cardNumber').value.trim();
+  const cardHolder=document.getElementById('cardHolder').value.trim();
+  const cardExpiry=document.getElementById('cardExpiry').value.trim();
+  if(cardNumber.replace(/\s/g,'').length<12 || !cardHolder || !cardExpiry){
+    alert('Пожалуйста, заполните данные карты.');
+    return;
+  }
+  const btn=document.querySelector('.booking-pay-btn');
+  btn.disabled=true; btn.textContent='Обработка оплаты…';
+  try{
+    const token=localStorage.getItem('token');
+    const res=await fetch('/api/bookings/'+currentBooking.id+'/pay',{method:'POST',headers:{Authorization:'Bearer '+token}});
+    const data=await res.json();
+    if(!res.ok){ alert(data.error||'Ошибка оплаты'); btn.disabled=false; btn.textContent='Оплатить'; return; }
+    location.href='confirmation.html?bookingId='+currentBooking.id;
+  }catch(e){ alert('Сервер недоступен.'); btn.disabled=false; btn.textContent='Оплатить'; }
+}
+
+document.addEventListener('DOMContentLoaded', loadPayment);
+</script>
+<script src="app.js"></script>
+</body>
+
+</html>

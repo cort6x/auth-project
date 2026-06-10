@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бронирование экскурсии - Свой турист</title>
+    <link rel="stylesheet" href="excursion-booking.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <header class="site-header">
+    <div class="header-container">
+        <a href="index.html" class="logo">Свой турист</a>  
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Главная</a>
+            <a href="search-results.html" class="nav-link">Поиск</a>
+            <a href="payment.html" class="nav-link">Оплата</a>
+            <a href="confirmation.html" class="nav-link">Бронирования</a>
+            <a href="destinations.html" class="nav-link">Каталог</a>
+            <button type="button" class="nav-link auth-nav-btn">Войти</button>
+        </nav>
+    </div>
+</header>
+    <nav class="navbar">
+        <div class="logo">Свой турист</div>
+        <div>
+            <a href="index.html" style="color: #38938B; text-decoration: none; font-weight: 600;">← На главную</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1 class="page-title">Бронирование экскурсии</h1>
+        
+        <div class="booking-card">
+            <div class="excursion-info">
+                <div class="excursion-image"></div>
+                <div class="excursion-details">
+                    <h3>Rio Sonador - Голубая река</h3>
+                    <div class="excursion-meta">
+                        <span>8 часов</span>
+                        <span>До 15 человек</span>
+                        <span>Пуэрто-Плата</span>
+                    </div>
+                    <p style="color: #666; margin-bottom: 10px;">Исследование реки с водопадами, природными бассейнами и тропическим лесом</p>
+                    <div class="price-tag">4 500 ₽ / человек</div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Выберите дату</h3>
+                <div class="date-selector">
+                    <div class="date-option selected" onclick="selectDate(this)">
+                        <div class="date-day">Пн</div>
+                        <div class="date-number">20</div>
+                    </div>
+                    <div class="date-option" onclick="selectDate(this)">
+                        <div class="date-day">Вт</div>
+                        <div class="date-number">21</div>
+                    </div>
+                    <div class="date-option" onclick="selectDate(this)">
+                        <div class="date-day">Ср</div>
+                        <div class="date-number">22</div>
+                    </div>
+                    <div class="date-option" onclick="selectDate(this)">
+                        <div class="date-day">Чт</div>
+                        <div class="date-number">23</div>
+                    </div>
+                    <div class="date-option" onclick="selectDate(this)">
+                        <div class="date-day">Пт</div>
+                        <div class="date-number">24</div>
+                    </div>
+                    <div class="date-option" onclick="selectDate(this)">
+                        <div class="date-day">Сб</div>
+                        <div class="date-number">25</div>
+                    </div>
+                    <div class="date-option" onclick="selectDate(this)">
+                        <div class="date-day">Вс</div>
+                        <div class="date-number">26</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Количество участников</h3>
+                <div class="guests-selector">
+                    <button class="guest-btn" onclick="changeGuests(-1)">−</button>
+                    <div class="guest-count" id="guestCount">2</div>
+                    <button class="guest-btn" onclick="changeGuests(1)">+</button>
+                    <span style="color: #666;">человек</span>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="section-title">Данные участников</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Имя</label>
+                        <input type="text" class="form-input" placeholder="Введите имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Фамилия</label>
+                        <input type="text" class="form-input" placeholder="Введите фамилию" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="example@mail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Телефон</label>
+                        <input type="tel" class="form-input" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="total-block">
+                <div class="total-row">
+                    <span class="total-label">Стоимость экскурсии:</span>
+                    <span class="total-value">4 500 ₽ × <span id="totalGuests">2</span> чел.</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Скидка:</span>
+                    <span class="total-value" style="color: #38938B;">− 0 ₽</span>
+                </div>
+                <div class="total-amount">
+                    <span id="totalAmount">9 000</span> ₽
+                </div>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="consent" required>
+                <label for="consent">Я согласен с условиями бронирования и политикой конфиденциальности</label>
+            </div>
+            
+            <div class="btn-block">
+                <button class="btn-secondary" onclick="window.history.back()">Назад</button>
+                <button class="btn-primary" onclick="confirmBooking()">Забронировать</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let guests = 2;
+        const pricePerPerson = 4500;
+        
+        function selectDate(element) {
+            document.querySelectorAll('.date-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+        
+        function changeGuests(delta) {
+            const newCount = guests + delta;
+            if (newCount >= 1 && newCount <= 10) {
+                guests = newCount;
+                document.getElementById('guestCount').textContent = guests;
+                document.getElementById('totalGuests').textContent = guests;
+                document.getElementById('totalAmount').textContent = (guests * pricePerPerson).toLocaleString();
+            }
+        }
+        
+        function confirmBooking() {
+            const consent = document.getElementById('consent').checked;
+            if (!consent) {
+                alert('Пожалуйста, подтвердите согласие с условиями');
+                return;
+            }
+            alert('Экскурсия успешно забронирована! Подтверждение отправлено на email.');
+            window.location.href = 'confirmation.html';
+        }
+    </script>
+
+
+
+<script src="app.js"></script>
+</body>
+</html>

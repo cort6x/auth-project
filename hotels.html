@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доминиканская Республика - Отели</title>
+    <link rel="stylesheet" href="hotels.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="header-container">
+        <a href="index.html" class="logo">Свой турист</a>  
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Главная</a>
+            <a href="search-results.html" class="nav-link">Поиск</a>
+            <a href="payment.html" class="nav-link">Оплата</a>
+            <a href="confirmation.html" class="nav-link">Бронирования</a>
+            <a href="destinations.html" class="nav-link">Каталог</a>
+            <button type="button" class="nav-link auth-nav-btn">Войти</button>
+        </nav>
+    </div>
+</header>
+
+    <div class="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <header class="header">
+        <div class="header-top">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" placeholder="Поиск">
+            </div>
+            <button class="login-btn" onclick="window.location.href='entrance.html'">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                Войти
+            </button>
+        </div>
+        <h1 class="header-title">ДОМИНИКАНСКАЯ РЕСПУБЛИКА</h1>
+    </header>
+
+
+    <section class="filter-section">
+        <div class="container">
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label class="filter-label" onclick="toggleCalendar()">
+                        <span>Заезд - выезд</span>
+                        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+                    </label>
+                    <input type="text" class="filter-input" id="dateInput" placeholder="Выберите даты" readonly onclick="toggleCalendar()">
+                    <div class="calendar-dropdown" id="calendarDropdown">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" onclick="changeMonth(-1)">
+                                <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                            </button>
+                            <div class="calendar-month-year" id="calendarMonthYear"></div>
+                            <button class="calendar-nav" onclick="changeMonth(1)">
+                                <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                            </button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div class="calendar-weekday">ПН</div>
+                            <div class="calendar-weekday">ВТ</div>
+                            <div class="calendar-weekday">СР</div>
+                            <div class="calendar-weekday">ЧТ</div>
+                            <div class="calendar-weekday">ПТ</div>
+                            <div class="calendar-weekday">СБ</div>
+                            <div class="calendar-weekday">ВС</div>
+                        </div>
+                        <div class="calendar-days" id="calendarDays"></div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" onclick="toggleGuests()">
+                        <span>Количество гостей</span>
+                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    </label>
+                    <input type="text" class="filter-input" id="guestInput" placeholder="2 взрослых" readonly onclick="toggleGuests()">
+                    <div class="guests-dropdown" id="guestsDropdown">
+                        <div class="guest-row">
+                            <span class="guest-label">Взрослые</span>
+                            <div class="guest-controls">
+                                <button class="guest-btn" onclick="changeGuests('adults', -1)">
+                                    <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+                                </button>
+                                <span class="guest-count" id="adultsCount">2</span>
+                                <button class="guest-btn" onclick="changeGuests('adults', 1)">
+                                    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="guest-row">
+                            <span class="guest-label">Дети</span>
+                            <div class="guest-controls">
+                                <button class="guest-btn" onclick="changeGuests('children', -1)">
+                                    <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+                                </button>
+                                <span class="guest-count" id="childrenCount">0</span>
+                                <button class="guest-btn" onclick="changeGuests('children', 1)">
+                                    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="done-btn" onclick="applyFilters()">Готово</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="promo-section">
+        <div class="container">
+            <div class="promo-container">
+                <div class="promo-image"></div>
+                <div class="promo-content">
+                    <h2 class="promo-title">Путешествуйте выгоднее!</h2>
+                    <p class="promo-text">Узнавайте первыми о выгодных ценах и спецпредложениях.</p>
+                    <form class="promo-form" onsubmit="handleSubscribe(event)">
+                        <input type="email" class="promo-input" placeholder="Электронная почта" required id="emailInput">
+                        <button type="submit" class="promo-submit">Подписаться</button>
+                    </form>
+                    <label class="promo-checkbox">
+                        <input type="checkbox" id="consentCheckbox" required>
+                        <span>Я согласен получать рассылки с новостями, рекламой и спецпредложениями</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="hotels-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Лучшие отели Доминиканы</h2>
+                <button class="filter-btn">
+                    <svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
+                    Фильтры
+                </button>
+            </div>
+
+  
+            <div class="hotels-toolbar" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center;">
+                <input id="hotelSearch" type="text" placeholder="Поиск по названию или городу" style="flex:1;min-width:200px;padding:12px 16px;border:1px solid #dde5e4;border-radius:10px;font-size:15px;">
+                <select id="hotelDest" style="padding:12px 16px;border:1px solid #dde5e4;border-radius:10px;font-size:15px;"><option value="">Все направления</option></select>
+                <select id="hotelSort" style="padding:12px 16px;border:1px solid #dde5e4;border-radius:10px;font-size:15px;">
+                    <option value="">По рейтингу</option>
+                    <option value="price_asc">Сначала дешевле</option>
+                    <option value="price_desc">Сначала дороже</option>
+                </select>
+            </div>
+            <div id="hotelsList" class="hotels-grid"></div>
+        </div>
+    </section>
+
+
+    <section class="attractions-section">
+        <div class="container">
+            <h3 class="attractions-title">Вам также могут быть интересны достопримечательности:</h3>
+            <div class="attractions-slider">
+                <button class="slider-arrow" onclick="scrollAttractions(-1)">
+                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+                <div class="attractions-grid" id="attractionsGrid">
+  
+                    <div class="attraction-card" onclick="window.location.href='attractions.html'">
+                        <div class="attraction-image">
+                            <img src="https://i.pinimg.com/originals/93/1d/f4/931df45911eed42c4a8aadaf5e316110.jpg" alt="Rio Sonador">
+                            <div class="attraction-name">Rio Sonador</div>
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-stars">
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            </div>
+                            <p class="attraction-type">Водоёмы, водопады</p>
+                        </div>
+                    </div>
+
+
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://avatars.mds.yandex.net/i?id=97da12a21a1b656048d920d1bb04e282_l-5906229-images-thumbs&n=13" alt="Los Haitises National Park">
+                            <div class="attraction-name">Los Haitises<br>National Park</div>
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-stars">
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24" style="fill: #ddd;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            </div>
+                            <p class="attraction-type">Национальные парки</p>
+                        </div>
+                    </div>
+
+
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://avatars.mds.yandex.net/i?id=9b86feb119ea83b37c5e7cf8c3f4bba3d85ad7c6-5427034-images-thumbs&n=13" alt="Hoyo Azul">
+                            <div class="attraction-name">Hoyo Azul</div>
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-stars">
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                <svg class="star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            </div>
+                            <p class="attraction-type">Водоёмы</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="slider-arrow" onclick="scrollAttractions(1)">
+                    <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+
+                <div class="footer-col">
+                    <h4>О компании</h4>
+                    <ul>
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Пресса</a></li>
+                        <li><a href="#">Партнёрам</a></li>
+                    </ul>
+                </div>
+
+         
+                <div class="footer-col">
+                    <h4>Путешествия</h4>
+                    <ul>
+                        <li><a href="#">Направления</a></li>
+                        <li><a href="#">Отели</a></li>
+                        <li><a href="#">Авиабилеты</a></li>
+                        <li><a href="#">Туры</a></li>
+                    </ul>
+                </div>
+
+
+                <div class="footer-col">
+                    <h4>Помощь</h4>
+                    <ul>
+                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#">Поддержка 24/7</a></li>
+                        <li><a href="#">Возврат</a></li>
+                    </ul>
+                </div>
+
+            
+                <div class="footer-col">
+                    <h4>Правовая информация</h4>
+                    <ul>
+                        <li><a href="#">Пользовательское соглашение</a></li>
+                        <li><a href="#">Политика конфиденциальности</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+        let currentDate = new Date();
+        let selectedDates = [];
+
+        function toggleCalendar() {
+            const dropdown = document.getElementById('calendarDropdown');
+            dropdown.classList.toggle('active');
+            if (dropdown.classList.contains('active')) {
+                renderCalendar();
+            }
+        }
+
+        function renderCalendar() {
+            const monthYear = document.getElementById('calendarMonthYear');
+            const daysContainer = document.getElementById('calendarDays');
+            
+            const months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 
+                          'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+            
+            monthYear.textContent = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+            
+            let html = '';
+            const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+            
+            for (let i = 0; i < startOffset; i++) {
+                html += '<div class="calendar-day other-month"></div>';
+            }
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isSelected = selectedDates.some(d => 
+                    d.getDate() === day && 
+                    d.getMonth() === currentDate.getMonth() && 
+                    d.getFullYear() === currentDate.getFullYear()
+                );
+                html += `<div class="calendar-day ${isSelected ? 'selected' : ''}" onclick="selectDate(${day})">${day}</div>`;
+            }
+            
+            daysContainer.innerHTML = html;
+        }
+
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function selectDate(day) {
+            const clickedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+            const existingIndex = selectedDates.findIndex(d => 
+                d.getDate() === clickedDate.getDate() && 
+                d.getMonth() === clickedDate.getMonth() && 
+                d.getFullYear() === clickedDate.getFullYear()
+            );
+            
+            if (existingIndex > -1) {
+                selectedDates.splice(existingIndex, 1);
+            } else {
+                selectedDates.push(clickedDate);
+                selectedDates.sort((a, b) => a - b);
+            }
+            
+            if (selectedDates.length === 2) {
+                const dateInput = document.getElementById('dateInput');
+                const formatDate = (d) => `${d.getDate().toString().padStart(2, '0')}.${(d.getMonth() + 1).toString().padStart(2, '0')}.${d.getFullYear()}`;
+                dateInput.value = `${formatDate(selectedDates[0])} - ${formatDate(selectedDates[1])}`;
+                document.getElementById('calendarDropdown').classList.remove('active');
+                selectedDates = [];
+            }
+            
+            renderCalendar();
+        }
+
+
+        let guests = {
+            adults: 2,
+            children: 0
+        };
+
+        function toggleGuests() {
+            const dropdown = document.getElementById('guestsDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function changeGuests(type, delta) {
+            const newValue = guests[type] + delta;
+            if (newValue >= 0 && newValue <= 10) {
+                guests[type] = newValue;
+                document.getElementById(`${type}Count`).textContent = newValue;
+                updateGuestInput();
+            }
+        }
+
+        function updateGuestInput() {
+            const guestInput = document.getElementById('guestInput');
+            let text = `${guests.adults} взросл${getDeclension(guests.adults, 'ый', 'ых', 'ых')}`;
+            if (guests.children > 0) {
+                text += `, ${guests.children} дет${getDeclension(guests.children, 'я', 'ей', 'ей')}`;
+            }
+            guestInput.value = text;
+        }
+
+        function getDeclension(number, one, two, five) {
+            let n = number % 100;
+            if (n >= 5 && n <= 20) return five;
+            n = n % 10;
+            if (n === 1) return one;
+            if (n >= 2 && n <= 4) return two;
+            return five;
+        }
+
+        function applyFilters() {
+            document.getElementById('calendarDropdown').classList.remove('active');
+            document.getElementById('guestsDropdown').classList.remove('active');
+        }
+
+  
+        function handleSubscribe(event) {
+            event.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const consent = document.getElementById('consentCheckbox').checked;
+            
+            if (consent) {
+                alert(`Спасибо за подписку! На адрес ${email} отправлено подтверждение.`);
+                document.getElementById('emailInput').value = '';
+                document.getElementById('consentCheckbox').checked = false;
+            } else {
+                alert('Пожалуйста, подтвердите согласие на получение рассылки.');
+            }
+        }
+
+  
+        function scrollAttractions(direction) {
+            const grid = document.getElementById('attractionsGrid');
+            const scrollAmount = 320;
+            grid.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+    
+        document.addEventListener('click', function(event) {
+            const calendarGroup = event.target.closest('.filter-group');
+            if (!calendarGroup || !calendarGroup.querySelector('.filter-label').contains(event.target)) {
+                document.getElementById('calendarDropdown').classList.remove('active');
+            }
+            
+            const guestsGroup = event.target.closest('.filter-group:nth-child(2)');
+            if (!guestsGroup || !guestsGroup.querySelector('.filter-label').contains(event.target)) {
+                document.getElementById('guestsDropdown').classList.remove('active');
+            }
+        });
+    </script>
+
+
+
+
+
+
+<script>
+let hotelsDestLoaded=false;
+function hotelCardHTML(h){
+  return `
+    <div class="hotel-card">
+      <div class="hotel-image" style="background-image:url('${h.image||''}')"></div>
+      <div class="hotel-content">
+        <div class="hotel-header">
+          <div><h3 class="hotel-title">${h.name}</h3>
+            <div style="color:#6a7d7a;font-size:14px;margin-top:4px;">${h.destination||''}${h.city&&h.city!==h.destination?(' · '+h.city):''}</div>
+          </div>
+          <div class="hotel-rating">${Number(h.star_rating).toFixed(1)}</div>
+        </div>
+        <p class="hotel-description">${(h.description||'').slice(0,160)}${(h.description||'').length>160?'…':''}</p>
+        <div class="hotel-footer" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div class="hotel-price" style="font-weight:700;color:#2c7269;">от ${Number(h.base_price).toLocaleString('ru-RU')} ₽ / ночь</div>
+          <button class="hotel-btn hotel-view-btn" onclick="goToHotel('${h.slug}')">Выбрать даты →</button>
+        </div>
+      </div>
+    </div>`;
+}
+async function loadHotels(){
+  const root=document.getElementById('hotelsList');
+  root.innerHTML='<p style="padding:24px;color:#6a7d7a;">Загружаем отели…</p>';
+  const params=new URLSearchParams();
+  const q=document.getElementById('hotelSearch').value.trim();
+  const dest=document.getElementById('hotelDest').value;
+  const sort=document.getElementById('hotelSort').value;
+  if(q) params.set('q',q);
+  if(dest) params.set('destination',dest);
+  if(sort) params.set('sort',sort);
+  try{
+    const res=await fetch('/api/hotels?'+params.toString());
+    const data=await res.json();
+    if(!res.ok){ root.innerHTML='<p style="padding:24px;">Ошибка загрузки отелей</p>'; return; }
+    if(!hotelsDestLoaded && data.destinations){
+      const sel=document.getElementById('hotelDest');
+      data.destinations.forEach(d=>{ const o=document.createElement('option'); o.value=d; o.textContent=d; sel.appendChild(o); });
+      hotelsDestLoaded=true;
+    }
+    if(!data.hotels.length){ root.innerHTML='<p style="padding:24px;color:#6a7d7a;">По запросу ничего не найдено.</p>'; return; }
+    root.innerHTML=data.hotels.map(hotelCardHTML).join('');
+  }catch(e){ root.innerHTML='<p style="padding:24px;">Сервер недоступен.</p>'; }
+}
+function goToHotel(slug){ location.href='hotel-detail.html?slug='+encodeURIComponent(slug); }
+let _t;
+document.addEventListener('DOMContentLoaded', ()=>{
+  loadHotels();
+  document.getElementById('hotelSearch').addEventListener('input', ()=>{ clearTimeout(_t); _t=setTimeout(loadHotels,300); });
+  document.getElementById('hotelDest').addEventListener('change', loadHotels);
+  document.getElementById('hotelSort').addEventListener('change', loadHotels);
+});
+</script>
+<script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="stylesheet" href="style.css">
+   
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="header-container">
+        <a href="index.html" class="logo">Свой турист</a>  
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Главная</a>
+            <a href="search-results.html" class="nav-link">Поиск</a>
+            <a href="payment.html" class="nav-link">Оплата</a>
+            <a href="confirmation.html" class="nav-link">Бронирования</a>
+            <a href="destinations.html" class="nav-link">Каталог</a>
+            <button type="button" class="nav-link auth-nav-btn">Войти</button>
+        </nav>
+    </div>
+</header>
+
+    <div class="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+
+    <nav class="navbar">
+        <div class="search-box">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" placeholder="Поиск">
+        </div>
+        <button type="button" class="auth-nav-btn">Войти</button>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">
+                ПУТЕШЕСТВИЕ
+                <span>ВАШЕЙ</span>
+                МЕЧТЫ
+            </h1>
+            <a href="#" class="hero-btn">Забронировать</a>
+        </div>
+
+
+        <div class="hero-cards">
+   
+            <div class="hero-card">
+                <div class="hero-card-img" style="background-image: url('https://avatars.mds.yandex.net/i?id=5c1dc60b2468141788aa4868732ac101_l-11543356-images-thumbs&n=13');"></div>
+                <div class="hero-card-body">
+                    <h3>Доминикана</h3>
+                    <p>Райские пляжи и бирюзовые воды Атлантического океана. Отдых мечты с комфортом и уютом.</p>
+                    <div class="hero-card-price">от 145 000 ₽/чел.</div>
+                    <button class="hero-card-btn" onclick="window.location.href='hotels.html'">Подробнее</button>
+                </div>
+            </div>
+
+
+            <div class="hero-card">
+                <div class="hero-card-img" style="background-image: url('https://io.sb.by/storage01/iblock/891/891b424fe68eb266572b50c780753bd1/a2e26a5ee61972b68ba58157ca47d1a5.jpg');"></div>
+                <div class="hero-card-body">
+                    <h3>Пху-Куок</h3>
+                    <p>Тропический остров Пху-Куок с белоснежными пляжами, коралловыми рифами и экзотической природой.</p>
+                    <div class="hero-card-price">от 120 000 ₽/чел.</div>
+                    <button class="hero-card-btn" onclick="window.location.href='PhuQuoc.html'">Подробнее</button>
+                </div>
+            </div>
+
+
+            <div class="hero-card">
+                <div class="hero-card-img" style="background-image: url('https://travelata.ru/blog/wp-content/uploads/2023/10/5-1.jpg');"></div>
+                <div class="hero-card-body">
+                    <h3>Таиланд</h3>
+                    <p>Страна улыбок, древних храмов, вкуснейшей кухни и бесконечных тропических пейзажей.</p>
+                    <div class="hero-card-price">от 110 000 ₽/чел.</div>
+                     <button class="hero-card-btn" onclick="window.location.href='Thailand.html'">Подробнее</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="popular-hotels">
+        <div class="container">
+            <h2 class="features-title">Популярные <span>отели</span> прямо сейчас:</h2>
+            <div id="popularHotels" class="popular-hotels-grid">
+                <p style="grid-column:1/-1;color:#6a7d7a;">Загружаем отели…</p>
+            </div>
+            <div style="text-align:center;margin-top:28px;">
+                <a href="hotels.html" class="hero-btn" style="display:inline-block;">Смотреть все отели</a>
+            </div>
+        </div>
+    </section>
+    <section class="features">
+        <div class="container">
+            <h2 class="features-title">Выбирая <span>нас</span> — вы получаете:</h2>
+            <div class="features-grid">
+  
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="#38938B">
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 9V3.5L18.5 9H13zM9 13h6v2H9v-2zm0 4h6v2H9v-2z"/>
+                        </svg>
+                    </div>
+                    <h3>Мгновенное подтверждение<br>бронирования</h3>
+                    <p>Безопасное подтверждение бронирования от отелей. Мы работаем только с проверенными партнёрами.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="#38938B">
+                            <path d="M7.5 21H3v-4.5l9-9 4.5 4.5-9 9zm12-12.56l-4.5-4.5-2.12 2.12 4.5 4.5 2.12-2.12zM12 2L2 12l4.5 4.5L16.5 6.5 12 2z"/>
+                        </svg>
+                    </div>
+                    <h3>Уникальные локальные<br>скидки</h3>
+                    <p>Доступ к эксклюзивным предложениям от отелей. Цены ниже на 20-30%. Конкуренты такого не предлагают.</p>
+                </div>
+
+  
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="#38938B">
+                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM11 5h2v6h-2zm0 8h2v2h-2z"/>
+                        </svg>
+                    </div>
+                    <h3>Круглосуточная<br>поддержка 24/7</h3>
+                    <p>Наша команда поддержки работает круглосуточно. Мы поможем вам в любой ситуации.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="destinations">
+        <div class="container">
+            <h2 class="destinations-title">Самые <span>популярные</span> направления в России:</h2>
+
+            <div class="destinations-slider">
+                <button class="slider-arrow">
+                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+
+                <div class="destinations-grid">
+                  
+                    <div class="destination-card">
+                        <div class="destination-card-img" style="background-image: url('https://a.d-cd.net/qSvbcxbT8JTHQeqnZMno2n532SA-1920.jpg');"></div>
+                        <div class="destination-card-body">
+                            <h3>Северный Кавказ</h3>
+                            <p>Величественные горы, живописные ущелья и термальные источники. Идеальное направление для активного отдыха и оздоровления.</p>
+                            <a href="#" class="destination-card-btn">Подробнее</a>
+                        </div>
+                    </div>
+
+                   
+                    <div class="destination-card">
+                        <div class="destination-card-img" style="background-image: url('https://avatars.mds.yandex.net/i?id=91f3af896227f44062096276b805ec57_l-10576312-images-thumbs&n=13');"></div>
+                        <div class="destination-card-body">
+                            <h3>Калининградская область</h3>
+                            <p>Уникальная архитектура, Балтийское море, янтарные берега и европейский колорит в самом западном регионе России.</p>
+                            <a href="#" class="destination-card-btn">Подробнее</a>
+                        </div>
+                    </div>
+
+                   
+                    <div class="destination-card">
+                        <div class="destination-card-img" style="background-image: url('https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_67209e71d125d94f8f44a285_6720bb0a79e4cf4ea3905346/scale_1200');"></div>
+                        <div class="destination-card-body">
+                            <h3>Санкт-Петербург</h3>
+                            <p>Культурная столица России с невероятными музеями, дворцами, разводными мостами и белыми ночами.</p>
+                            <a href="#" class="destination-card-btn">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="slider-arrow">
+                    <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </button>
+            </div>
+
+            <div class="show-more-wrapper">
+                <button class="show-more-btn">Показать ещё</button>
+            </div>
+        </div>
+    </section>
+
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+        
+                <div class="footer-col">
+                    <h4>О компании</h4>
+                    <ul>
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Пресса</a></li>
+                        <li><a href="#">Партнёрам</a></li>
+                    </ul>
+                </div>
+
+             
+                <div class="footer-col">
+                    <h4>Путешествия</h4>
+                    <ul>
+                        <li><a href="#">Направления</a></li>
+                        <li><a href="#">Отели</a></li>
+                        <li><a href="#">Авиабилеты</a></li>
+                        <li><a href="#">Туры</a></li>
+                    </ul>
+                </div>
+
+          
+                <div class="footer-col">
+                    <h4>Помощь</h4>
+                    <ul>
+                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#">Поддержка 24/7</a></li>
+                        <li><a href="#">Возврат</a></li>
+                    </ul>
+                </div>
+
+               
+                <div class="footer-col">
+                    <h4>Правовая информация</h4>
+                    <ul>
+                        <li><a href="#">Пользовательское соглашение</a></li>
+                        <li><a href="#">Политика конфиденциальности</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+<script>
+(function () {
+  const RU = (n) => Number(n || 0).toLocaleString('ru-RU');
+
+  // 1) Живой поиск из шапки и героя -> страница результатов
+  function goSearch(q) {
+    const u = new URLSearchParams();
+    if (q && q.trim()) u.set('q', q.trim());
+    location.href = 'search-results.html' + (u.toString() ? '?' + u.toString() : '');
+  }
+  document.querySelectorAll('.search-box input, .navbar input[type="text"]').forEach((inp) => {
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') goSearch(inp.value); });
+  });
+  const heroBtn = document.querySelector('.hero-btn');
+  if (heroBtn) heroBtn.addEventListener('click', (e) => { e.preventDefault(); location.href = 'search-results.html'; });
+
+  // 2) Чиним «мёртвые» ссылки направлений
+  document.querySelectorAll('.destination-card-btn').forEach((a) => { if (a.getAttribute('href') === '#') a.setAttribute('href', 'destinations.html'); });
+
+  // 3) Подгружаем популярные отели из БД
+  async function loadPopular() {
+    const box = document.getElementById('popularHotels');
+    if (!box) return;
+    try {
+      const res = await fetch('/api/hotels?sort=rating');
+      const data = await res.json();
+      const hotels = (data.hotels || []).slice(0, 6);
+      if (!hotels.length) { box.innerHTML = '<p style="grid-column:1/-1;color:#6a7d7a;">Отели скоро появятся.</p>'; return; }
+      box.innerHTML = hotels.map((h) => {
+        const loc = [h.city, h.destination].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).join(', ');
+        return `
+        <a class="popular-card" href="hotel-detail.html?slug=${encodeURIComponent(h.slug)}">
+          <div class="popular-card-img" style="background-image:url('${h.image || ''}')">
+            <span class="popular-card-rating">★ ${Number(h.star_rating).toFixed(1)}</span>
+          </div>
+          <div class="popular-card-body">
+            <h3>${h.name}</h3>
+            <div class="popular-card-loc">${loc}</div>
+            <div class="popular-card-price">от ${RU(h.base_price)} ₽ <span>/ ночь</span></div>
+          </div>
+        </a>`;
+      }).join('');
+    } catch (e) {
+      box.innerHTML = '<p style="grid-column:1/-1;color:#6a7d7a;">Не удалось загрузить отели.</p>';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', loadPopular);
+})();
+</script>
+<script src="app.js"></script>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Направления - Свой турист</title>
+    <link rel="stylesheet" href="destinations.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <header class="site-header">
+    <div class="header-container">
+        <a href="index.html" class="logo">Свой турист</a>  
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Главная</a>
+            <a href="search-results.html" class="nav-link">Поиск</a>
+            <a href="payment.html" class="nav-link">Оплата</a>
+            <a href="confirmation.html" class="nav-link">Бронирования</a>
+            <a href="destinations.html" class="nav-link">Каталог</a>
+            <button type="button" class="nav-link auth-nav-btn">Войти</button>
+        </nav>
+    </div>
+</header>
+    
+    <div class="hero">
+        <h1>Популярные направления</h1>
+        <p>Откройте для себя лучшие курорты мира с нами</p>
+    </div>
+    
+    <div class="container">
+        <h2 class="section-title">Куда хотите отправиться?</h2>
+        
+        <div class="destinations-grid">
+            <div class="destination-card" onclick="window.location.href='search-results.html'">
+                <div class="destination-image">
+                    <span class="destination-badge">Популярное</span>
+                </div>
+                <div class="destination-content">
+                    <h3 class="destination-name">Доминикана</h3>
+                    <div class="destination-location">Карибский бассейн</div>
+                    <p class="destination-description">Райские пляжи, бирюзовая вода и все включено. Идеально для романтического отдыха и семейного отпуска.</p>
+                    <div class="destination-stats">
+                        <div class="stat">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">отелей</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">4.7</div>
+                            <div class="stat-label">рейтинг</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">от 145к</div>
+                            <div class="stat-label">цена</div>
+                        </div>
+                    </div>
+                    <button class="btn-explore">Смотреть отели</button>
+                </div>
+            </div>
+            
+            <div class="destination-card" onclick="window.location.href='search-results.html'">
+                <div class="destination-image" style="background-image: url('https://infotour.ru/upload/uf/bbd/lusfnqnzdxtbgs65elvikv0pztq4v2lq.jpeg')"></div>
+                <div class="destination-content">
+                    <h3 class="destination-name">Таиланд</h3>
+                    <div class="destination-location">Юго-Восточная Азия</div>
+                    <p class="destination-description">Экзотика, храмы, вкусная кухня и невероятная природа. Страна улыбок ждет вас!</p>
+                    <div class="destination-stats">
+                        <div class="stat">
+                            <div class="stat-value">243</div>
+                            <div class="stat-label">отеля</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">4.6</div>
+                            <div class="stat-label">рейтинг</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">от 110к</div>
+                            <div class="stat-label">цена</div>
+                        </div>
+                    </div>
+                    <button class="btn-explore">Смотреть отели</button>
+                </div>
+            </div>
+            
+            <div class="destination-card" onclick="window.location.href='search-results.html'">
+                <div class="destination-image" style="background-image: url('https://res.klook.com/image/upload/fl_lossy.progressive,q_85/c_fill,w_1000/v1617869169/blog/xjkdllty3b26mtwhskca.jpg')"></div>
+                <div class="destination-content">
+                    <h3 class="destination-name">Вьетнам (Пху-Куок)</h3>
+                    <div class="destination-location">Остров Пху-Куок</div>
+                    <p class="destination-description">Белоснежные пляжи, коралловые рифы и тропическая природа. Недорогой и качественный отдых.</p>
+                    <div class="destination-stats">
+                        <div class="stat">
+                            <div class="stat-value">98</div>
+                            <div class="stat-label">отелей</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">4.5</div>
+                            <div class="stat-label">рейтинг</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">от 120к</div>
+                            <div class="stat-label">цена</div>
+                        </div>
+                    </div>
+                    <button class="btn-explore">Смотреть отели</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="popular-section">
+            <h2 class="section-title" style="margin-bottom: 20px;">Популярные отели в Доминикане</h2>
+            <div class="hotels-preview">
+                <div class="hotel-preview" onclick="window.location.href='hotel-detail.html'">
+                    <img src="https://ak-d.tripcdn.com/images/22071a0000019bzi3C242_R_960_660_R5_D.jpg" alt="Hotel">
+                    <div class="hotel-preview-overlay">
+                        <div class="hotel-preview-name">Occidental Punta Cana</div>
+                        <div class="hotel-preview-price">от 12 500 ₽/ночь</div>
+                    </div>
+                </div>
+                <div class="hotel-preview" onclick="window.location.href='hotel-detail.html'">
+                    <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/d0/c7/23/barcelo-bavaro-palace.jpg?w=1200&h=-1&s=1" alt="Hotel">
+                    <div class="hotel-preview-overlay">
+                        <div class="hotel-preview-name">Barceló Bávaro</div>
+                        <div class="hotel-preview-price">от 15 800 ₽/ночь</div>
+                    </div>
+                </div>
+                <div class="hotel-preview" onclick="window.location.href='hotel-detail.html'">
+                    <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/a1/17/6e/pool-area-majestic-mirage.jpg?w=900&h=500&s=1" alt="Hotel">
+                    <div class="hotel-preview-overlay">
+                        <div class="hotel-preview-name">Majestic Mirage</div>
+                        <div class="hotel-preview-price">от 18 200 ₽/ночь</div>
+                    </div>
+                </div>
+                <div class="hotel-preview" onclick="window.location.href='hotel-detail.html'">
+                    <img src="https://x5pattaya.ru/upload/place/38/images/wm_otel-hard-rock-hotel-pattaya-14.jpg" alt="Hotel">
+                    <div class="hotel-preview-overlay">
+                        <div class="hotel-preview-name">Hard Rock Hotel</div>
+                        <div class="hotel-preview-price">от 22 000 ₽/ночь</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script>
+(function () {
+  const RU = (n) => Number(n || 0).toLocaleString('ru-RU');
+  const NAME_TO_DEST = {
+    'доминикана': 'Пунта-Кана',
+    'таиланд': 'Таиланд',
+    'вьетнам (пху-куок)': 'Фукуок',
+  };
+  function shortK(n) { return n >= 1000 ? Math.round(n / 1000) + 'к' : RU(n); }
+
+  async function init() {
+    let hotels = [];
+    try {
+      const res = await fetch('/api/hotels');
+      const data = await res.json();
+      hotels = data.hotels || [];
+    } catch (e) { /* оставим карточки кликабельными ниже */ }
+
+    const byDest = {};
+    hotels.forEach((h) => { (byDest[h.destination] = byDest[h.destination] || []).push(h); });
+
+    // 1) Карточки направлений: реальная статистика + фильтрованный переход
+    document.querySelectorAll('.destination-card').forEach((card) => {
+      const nameEl = card.querySelector('.destination-name');
+      if (!nameEl) return;
+      const dest = NAME_TO_DEST[nameEl.textContent.trim().toLowerCase()];
+      card.style.cursor = 'pointer';
+      card.onclick = () => location.href = 'search-results.html' + (dest ? '?destination=' + encodeURIComponent(dest) : '');
+      const list = dest ? (byDest[dest] || []) : [];
+      const stats = card.querySelectorAll('.stat-value');
+      if (list.length && stats.length >= 3) {
+        const minPrice = Math.min(...list.map((h) => Number(h.base_price)));
+        const avg = list.reduce((s, h) => s + Number(h.star_rating), 0) / list.length;
+        stats[0].textContent = list.length;
+        stats[1].textContent = avg.toFixed(1);
+        stats[2].textContent = 'от ' + shortK(minPrice);
+      }
+      const btn = card.querySelector('.btn-explore');
+      if (btn) btn.onclick = (e) => { e.stopPropagation(); card.onclick(); };
+    });
+
+    // 2) Популярные отели — из БД, с реальными ссылками
+    const preview = document.querySelector('.hotels-preview');
+    if (preview) {
+      const top = [...hotels].sort((a, b) => b.star_rating - a.star_rating).slice(0, 4);
+      if (top.length) {
+        preview.innerHTML = top.map((h) => `
+          <div class="hotel-preview" style="background-image:url('${h.image || ''}');background-size:cover;background-position:center;cursor:pointer;"
+               onclick="location.href='hotel-detail.html?slug=${encodeURIComponent(h.slug)}'">
+            <div class="hotel-preview-overlay">
+              <div class="hotel-preview-name">${h.name}</div>
+              <div class="hotel-preview-price">от ${RU(h.base_price)} ₽/ночь</div>
+            </div>
+          </div>`).join('');
+      }
+    }
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script src="app.js"></script>
+</body>
+</html>

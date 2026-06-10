@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты поиска - Свой турист</title>
+    <link rel="stylesheet" href="search-results.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <header class="site-header">
+    <div class="header-container">
+        <a href="index.html" class="logo">Свой турист</a>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Главная</a>
+            <a href="search-results.html" class="nav-link">Поиск</a>
+            <a href="payment.html" class="nav-link">Оплата</a>
+            <a href="confirmation.html" class="nav-link">Бронирования</a>
+            <a href="destinations.html" class="nav-link">Каталог</a>
+            <button type="button" class="nav-link auth-nav-btn">Войти</button>
+        </nav>
+    </div>
+</header>
+
+    <div class="container">
+        <!-- Живая строка поиска -->
+        <div class="sr-searchbar">
+            <input type="text" id="srQuery" class="sr-search-input" placeholder="Куда едем? Отель, город или направление">
+            <select id="srDest" class="sr-search-select"><option value="">Все направления</option></select>
+            <button type="button" id="srSearchBtn" class="sr-search-btn">Найти</button>
+        </div>
+
+        <div class="search-header">
+            <div class="search-query" id="srTitle">Все отели</div>
+            <div class="search-meta" id="srMeta">Подбираем варианты…</div>
+        </div>
+
+        <div class="main-layout">
+            <aside class="filters-sidebar">
+                <div class="filter-group">
+                    <div class="filter-title">Цена за ночь, ₽</div>
+                    <div class="price-range">
+                        <input type="number" id="srMin" class="price-input" placeholder="От" min="0">
+                        <span>—</span>
+                        <input type="number" id="srMax" class="price-input" placeholder="До" min="0">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-title">Минимальный рейтинг</div>
+                    <label class="filter-option"><input type="radio" name="srRating" value="0" checked><span>Любой</span></label>
+                    <label class="filter-option"><input type="radio" name="srRating" value="4"><span>от 4.0 ★</span></label>
+                    <label class="filter-option"><input type="radio" name="srRating" value="4.5"><span>от 4.5 ★</span></label>
+                </div>
+                <div class="filter-group">
+                    <button type="button" id="srApply" class="sr-apply-btn">Применить фильтры</button>
+                    <button type="button" id="srReset" class="sr-reset-btn">Сбросить</button>
+                </div>
+            </aside>
+            <main>
+                <div class="results-header">
+                    <div class="results-count" id="srCount">Загрузка…</div>
+                    <select class="sort-select" id="srSort">
+                        <option value="">Сначала популярные</option>
+                        <option value="price_asc">Сначала дешёвые</option>
+                        <option value="price_desc">Сначала дорогие</option>
+                        <option value="rating">По рейтингу</option>
+                    </select>
+                </div>
+                <div id="srResults"></div>
+            </main>
+        </div>
+    </div>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const RU = (n) => Number(n || 0).toLocaleString('ru-RU');
+  let allDestinations = [];
+
+  function readUrl() {
+    const u = new URLSearchParams(location.search);
+    return {
+      q: u.get('q') || '',
+      destination: u.get('destination') || '',
+      min_price: u.get('min_price') || '',
+      max_price: u.get('max_price') || '',
+      sort: u.get('sort') || '',
+      rating: u.get('rating') || '0',
+    };
+  }
+
+  function syncUrl(p) {
+    const u = new URLSearchParams();
+    if (p.q) u.set('q', p.q);
+    if (p.destination) u.set('destination', p.destination);
+    if (p.min_price) u.set('min_price', p.min_price);
+    if (p.max_price) u.set('max_price', p.max_price);
+    if (p.sort) u.set('sort', p.sort);
+    if (p.rating && p.rating !== '0') u.set('rating', p.rating);
+    history.replaceState(null, '', 'search-results.html' + (u.toString() ? '?' + u.toString() : ''));
+  }
+
+  function cardHTML(h) {
+    const desc = (h.description || '').slice(0, 150) + ((h.description || '').length > 150 ? '…' : '');
+    const loc = [h.city, h.destination].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).join(', ');
+    return `
+      <div class="hotel-card" onclick="location.href='hotel-detail.html?slug=${encodeURIComponent(h.slug)}'">
+        <div class="hotel-image" style="background-image:url('${h.image || ''}')"></div>
+        <div class="hotel-content">
+          <h3 class="hotel-name">${h.name}</h3>
+          <div class="hotel-location">${loc}</div>
+          <div class="hotel-rating"><span class="stars">★</span><span class="review-count">${Number(h.star_rating).toFixed(1)} · отзывы гостей</span></div>
+          <p style="color:#6a7d7a;font-size:14px;margin:8px 0;">${desc}</p>
+          <div class="hotel-footer">
+            <div>
+              <div class="hotel-price">${RU(h.base_price)} ₽</div>
+              <div class="price-note">за ночь</div>
+            </div>
+            <button class="btn-view" type="button" onclick="event.stopPropagation();location.href='hotel-detail.html?slug=${encodeURIComponent(h.slug)}'">Выбрать даты →</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  async function search() {
+    const p = currentParams();
+    syncUrl(p);
+    const box = $('srResults');
+    box.innerHTML = '<p style="padding:24px;color:#6a7d7a;">Ищем отели…</p>';
+    const qs = new URLSearchParams();
+    if (p.q) qs.set('q', p.q);
+    if (p.destination) qs.set('destination', p.destination);
+    if (p.min_price) qs.set('min_price', p.min_price);
+    if (p.max_price) qs.set('max_price', p.max_price);
+    if (p.sort) qs.set('sort', p.sort);
+    try {
+      const res = await fetch('/api/hotels?' + qs.toString());
+      const data = await res.json();
+      if (!res.ok) { box.innerHTML = '<p style="padding:24px;">Ошибка загрузки.</p>'; return; }
+      if (allDestinations.length === 0 && data.destinations) {
+        allDestinations = data.destinations;
+        const sel = $('srDest');
+        data.destinations.forEach((d) => {
+          const o = document.createElement('option');
+          o.value = d; o.textContent = d;
+          if (d === p.destination) o.selected = true;
+          sel.appendChild(o);
+        });
+      }
+      let hotels = data.hotels || [];
+      const minR = parseFloat(p.rating) || 0;
+      if (minR > 0) hotels = hotels.filter((h) => Number(h.star_rating) >= minR);
+
+      $('srTitle').textContent = p.destination ? ('Отели · ' + p.destination)
+        : p.q ? ('Поиск: «' + p.q + '»') : 'Все отели';
+      $('srMeta').textContent = 'Цены за ночь указаны без учёта дат — выберите отель, чтобы рассчитать стоимость.';
+      $('srCount').textContent = 'Найдено: ' + hotels.length;
+
+      box.innerHTML = hotels.length
+        ? hotels.map(cardHTML).join('')
+        : '<p style="padding:24px;color:#6a7d7a;">По вашему запросу ничего не найдено. Попробуйте изменить фильтры.</p>';
+    } catch (e) {
+      box.innerHTML = '<p style="padding:24px;">Сервер недоступен.</p>';
+    }
+  }
+
+  function currentParams() {
+    return {
+      q: $('srQuery').value.trim(),
+      destination: $('srDest').value,
+      min_price: $('srMin').value.trim(),
+      max_price: $('srMax').value.trim(),
+      sort: $('srSort').value,
+      rating: (document.querySelector('input[name="srRating"]:checked') || {}).value || '0',
+    };
+  }
+
+  function init() {
+    const p = readUrl();
+    $('srQuery').value = p.q;
+    $('srMin').value = p.min_price;
+    $('srMax').value = p.max_price;
+    $('srSort').value = p.sort;
+    const r = document.querySelector('input[name="srRating"][value="' + p.rating + '"]');
+    if (r) r.checked = true;
+    // destination select is filled after first fetch; set value via a one-shot
+    search().then(() => { if (p.destination) { $('srDest').value = p.destination; } });
+
+    $('srSearchBtn').addEventListener('click', search);
+    $('srApply').addEventListener('click', search);
+    $('srSort').addEventListener('change', search);
+    $('srDest').addEventListener('change', search);
+    $('srQuery').addEventListener('keydown', (e) => { if (e.key === 'Enter') search(); });
+    $('srReset').addEventListener('click', () => {
+      $('srQuery').value = ''; $('srMin').value = ''; $('srMax').value = '';
+      $('srSort').value = ''; $('srDest').value = '';
+      const any = document.querySelector('input[name="srRating"][value="0"]'); if (any) any.checked = true;
+      search();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F4F3F3;
+            color: #333;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F4F3F3;
+    color: #333;
+}
+
+/* === ШАПКА САЙТА === */
+.site-header {
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Выравнивание по левому краю */
+    gap: 40px;
+}
+
+/* Логотип */
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #38938B;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+    opacity: 0.85;
+}
+
+/* Навигация */
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #444;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+/* Эффект при наведении */
+.nav-link:hover {
+    color: #38938B;
+    background-color: #F4F3F3;
+}
+
+/* Активная страница (добавьте класс active к нужной ссылке в HTML) */
+.nav-link.active {
+    color: #FFFFFF;
+    background-color: #38938B;
+    font-weight: 600;
+}
+
+.nav-link.active:hover {
+    background-color: #2e7a73; /* Чуть темнее при наведении на активную */
+}
+
+/* Адаптивность для мобильных устройств (опционально) */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 20px;
+        gap: 15px;
+    }
+    
+    .main-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .nav-link {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+}
+        .navbar {
+            background: #FFFFFF;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #38938B;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #38938B;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://avatars.mds.yandex.net/i?id=dca23f87eb827da52c064ff2ace12f19_l-10499278-images-thumbs&n=13') center/cover;
+            padding: 100px 40px;
+            text-align: center;
+            color: #FFFFFF;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .destination-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+        
+        .destination-image {
+            height: 250px;
+            background: url('https://avatars.mds.yandex.net/i?id=07ee6c369cfa1a69314416493e8b07d34655c150-5476551-images-thumbs&n=13') center/cover;
+            position: relative;
+        }
+        
+        .destination-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #38938B;
+            color: #FFFFFF;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .destination-content {
+            padding: 25px;
+        }
+        
+        .destination-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        
+        .destination-location {
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .destination-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .destination-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #38938B;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .btn-explore {
+            width: 100%;
+            background: #38938B;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-explore:hover {
+            background: #FFFFFF;
+            color: #38938B;
+            border: 2px solid #38938B;
+        }
+        
+        .popular-section {
+            background: #FFFFFF;
+            padding: 60px 40px;
+            border-radius: 16px;
+            margin-bottom: 60px;
+        }
+        
+        .hotels-preview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .hotel-preview {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 200px;
+            cursor: pointer;
+        }
+        
+        .hotel-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .hotel-preview:hover img {
+            transform: scale(1.1);
+        }
+        
+        .hotel-preview-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px;
+            color: #FFFFFF;
+        }
+        
+        .hotel-preview-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .hotel-preview-price {
+            color: #38938B;
+            font-weight: 700;
+        }

@@ -1,0 +1,152 @@
+/* app.css — стили чатбота + глобальная адаптивность под мобильные устройства */
+
+:root {
+  --st-teal: #38938B;
+  --st-teal-dark: #2c7269;
+}
+
+/* ===================== ЧАТБОТ ===================== */
+.st-chat-wrap { position: fixed; right: 20px; bottom: 20px; z-index: 9999; font-family: inherit; }
+
+.st-chat-toggle {
+  position: relative; width: 60px; height: 60px; border-radius: 50%; border: none;
+  background: linear-gradient(135deg, var(--st-teal), var(--st-teal-dark)); color: #fff;
+  cursor: pointer; box-shadow: 0 8px 24px rgba(56,147,139,.4);
+  display: flex; align-items: center; justify-content: center; transition: transform .2s;
+}
+.st-chat-toggle:hover { transform: scale(1.06); }
+.st-chat-toggle svg { width: 28px; height: 28px; }
+.st-chat-badge {
+  position: absolute; top: -2px; right: -2px; background: #ff6b6b; color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px;
+}
+
+.st-chat-window {
+  position: absolute; right: 0; bottom: 76px; width: 360px; max-width: calc(100vw - 32px);
+  height: 520px; max-height: calc(100vh - 120px); background: #fff; border-radius: 18px;
+  box-shadow: 0 16px 48px rgba(0,0,0,.22); display: flex; flex-direction: column;
+  overflow: hidden; opacity: 0; transform: translateY(16px) scale(.98); pointer-events: none;
+  transition: opacity .2s, transform .2s;
+}
+.st-chat-window.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+.st-chat-header {
+  display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+  background: linear-gradient(135deg, var(--st-teal), var(--st-teal-dark)); color: #fff;
+}
+.st-chat-ava {
+  width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center; font-weight: 700;
+}
+.st-chat-head-info { display: flex; flex-direction: column; line-height: 1.25; flex: 1; min-width: 0; }
+.st-chat-head-info strong { font-size: 15px; }
+.st-chat-head-info span { font-size: 11px; opacity: .9; }
+.st-chat-close { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; line-height: 1; }
+
+.st-chat-body { flex: 1; overflow-y: auto; padding: 16px; background: #f5f8f8; display: flex; flex-direction: column; gap: 10px; }
+.st-chat-msg { display: flex; }
+.st-chat-msg-user { justify-content: flex-end; }
+.st-chat-bubble {
+  max-width: 85%; padding: 10px 13px; border-radius: 14px; font-size: 14px; line-height: 1.45;
+  background: #fff; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,.06); word-wrap: break-word;
+}
+.st-chat-msg-user .st-chat-bubble { background: var(--st-teal); color: #fff; }
+
+.st-chat-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.st-chat-card {
+  display: flex; flex-direction: column; padding: 10px 12px; border-radius: 12px;
+  background: #f0f7f6; border: 1px solid rgba(56,147,139,.2); text-decoration: none; color: #2c3e3b;
+}
+.st-chat-card:hover { background: #e6f2f0; }
+.st-chat-card strong { font-size: 14px; }
+.st-chat-card span { font-size: 12px; color: #6a7d7a; }
+
+.st-chat-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.st-chat-action {
+  padding: 8px 14px; border-radius: 999px; background: var(--st-teal); color: #fff;
+  text-decoration: none; font-size: 13px; font-weight: 600;
+}
+.st-chat-action:hover { background: var(--st-teal-dark); }
+
+.st-chat-quick { display: flex; gap: 8px; padding: 10px 12px; overflow-x: auto; background: #fff; border-top: 1px solid #eee; }
+.st-chat-quick button {
+  white-space: nowrap; padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(56,147,139,.3);
+  background: #fff; color: var(--st-teal-dark); font-size: 12.5px; cursor: pointer;
+}
+.st-chat-quick button:hover { background: #f0f7f6; }
+
+.st-chat-form { display: flex; gap: 8px; padding: 12px; background: #fff; border-top: 1px solid #eee; }
+.st-chat-form input {
+  flex: 1; padding: 11px 14px; border: 1px solid #dde5e4; border-radius: 999px; font-size: 14px; outline: none;
+}
+.st-chat-form input:focus { border-color: var(--st-teal); }
+.st-chat-form button {
+  width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--st-teal);
+  color: #fff; font-size: 16px; cursor: pointer; flex-shrink: 0;
+}
+
+.st-dot { display: inline-block; width: 7px; height: 7px; margin: 0 2px; border-radius: 50%; background: #b7c4c2; animation: stbounce 1.2s infinite; }
+.st-dot:nth-child(2) { animation-delay: .2s; }
+.st-dot:nth-child(3) { animation-delay: .4s; }
+@keyframes stbounce { 0%,60%,100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
+
+/* ===================== ГЛОБАЛЬНАЯ АДАПТИВНОСТЬ ===================== */
+* { box-sizing: border-box; }
+img, svg, video { max-width: 100%; }
+
+@media (max-width: 768px) {
+  /* Шапки/навигация переносятся и не выходят за экран */
+  .site-header .header-container,
+  .navbar {
+    flex-wrap: wrap !important; gap: 8px 12px !important;
+    padding-left: 14px !important; padding-right: 14px !important;
+  }
+  .main-nav { flex-wrap: wrap !important; gap: 8px 14px !important; row-gap: 6px !important; }
+  .main-nav .nav-link { font-size: 14px !important; }
+
+  /* Контейнеры по ширине экрана */
+  .container { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Сетки бронирования в одну колонку */
+  .content-grid { grid-template-columns: 1fr !important; }
+  .form-row { grid-template-columns: 1fr !important; }
+
+  /* Двухколоночные раскладки каталога/поиска -> в одну колонку */
+  .main-layout { display: block !important; }
+  .filters-sidebar { width: auto !important; margin-bottom: 18px !important; }
+  .hotel-card { flex-direction: column !important; }
+  .hotel-image { width: 100% !important; min-height: 180px !important; }
+
+  /* Кнопки удобно нажимать пальцем */
+  button, .btn, .btn-primary, .btn-secondary, .btn-pay,
+  .hotel-btn, .hotel-view-btn, input[type="submit"] {
+    min-height: 46px;
+  }
+
+  /* Чатбот занимает почти весь экран и не перекрывает контент */
+  .st-chat-window {
+    width: calc(100vw - 24px); right: -8px; height: 70vh; max-height: 70vh; bottom: 74px;
+  }
+  .st-chat-toggle { width: 54px; height: 54px; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 15px; }
+  h1 { font-size: 1.5rem !important; }
+  h2 { font-size: 1.25rem !important; }
+  .page-title { font-size: 1.4rem !important; }
+  .st-chat-wrap { right: 12px; bottom: 12px; }
+}
+
+/* ===================== СЕТКА ОТЕЛЕЙ ===================== */
+.hotels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+@media (max-width: 700px) { .hotels-grid { grid-template-columns: 1fr; gap: 16px; } }
+.hotels-grid .hotel-card { display: flex; flex-direction: column; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+.hotels-grid .hotel-image { width: 100%; height: 200px; background-size: cover; background-position: center; background-color: #e6eeed; }
+.hotels-grid .hotel-content { padding: 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.hotels-grid .hotel-header { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.hotels-grid .hotel-title { font-size: 18px; margin: 0; color: #2c3e3b; }
+.hotels-grid .hotel-rating { background: var(--st-teal); color: #fff; font-weight: 700; padding: 4px 10px; border-radius: 8px; font-size: 14px; }
+.hotels-grid .hotel-description { color: #6a7d7a; font-size: 14px; line-height: 1.5; flex: 1; }
+.hotels-grid .hotel-btn { background: var(--st-teal); color: #fff; border: none; padding: 11px 16px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+.hotels-grid .hotel-btn:hover { background: var(--st-teal-dark); }

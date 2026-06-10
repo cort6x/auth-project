@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бронирование подтверждено - Свой турист</title>
+    <link rel="stylesheet" href="confirmation.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <header class="site-header">
+    <div class="header-container">
+        <a href="index.html" class="logo">Свой турист</a>  
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Главная</a>
+            <a href="search-results.html" class="nav-link">Поиск</a>
+            <a href="payment.html" class="nav-link">Оплата</a>
+            <a href="confirmation.html" class="nav-link">Бронирования</a>
+            <a href="destinations.html" class="nav-link">Каталог</a>
+            <button type="button" class="nav-link auth-nav-btn">Войти</button>
+        </nav>
+    </div>
+</header>
+    <div class="page-head" style="max-width:1200px;margin:24px auto 0;padding:0 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;"><h1 class="success-title" style="margin:0;">Мои бронирования</h1><a href="profile.html" style="color:#38938B;text-decoration:none;font-weight:600;">← В профиль</a></div>
+    
+    <div class="container">
+        <div class="success-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        </div>
+        
+        <h1 class="success-title">Бронирование подтверждено!</h1>
+        <p class="success-message">Подтверждение отправлено на ваш email</p>
+        
+        <div id="bookingsList" style="max-width:1200px;margin:24px auto;padding:0 20px;display:grid;gap:16px;"></div><div class="action-buttons">
+                <a href="profile.html" class="btn btn-secondary">В личный кабинет</a>
+                <a href="index.html" class="btn btn-primary">На главную</a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+<script>
+function statusBadge(status){
+  const map={paid:['Оплачено','#e9faf3','#1f7a57'],pending:['Ожидает оплаты','#fff6dd','#a37400'],cancelled:['Отменено','#fdeaea','#b00020']};
+  const m=map[status]||['—','#eee','#555'];
+  return '<span style="padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;height:fit-content;background:'+m[1]+';color:'+m[2]+';">'+m[0]+'</span>';
+}
+function bookingCard(b, featured){
+  const rows=[
+    ['Код брони', b.booking_code],
+    ['Заезд', b.check_in],
+    ['Выезд', b.check_out],
+    ['Ночей', b.nights],
+    ['Гости', b.adults+' взрослых'+(b.children?(', '+b.children+' детей'):'')],
+    ['Номеров', b.rooms],
+    ['Сумма', Number(b.total_price).toLocaleString('ru-RU')+' ₽'],
+  ].map(r=>'<div><span style="color:#777;">'+r[0]+':</span> <strong>'+r[1]+'</strong></div>').join('');
+  let actions='';
+  if(b.status==='pending'){
+    actions+='<a href="payment.html?bookingId='+b.id+'" style="background:#38938B;color:#fff;text-decoration:none;padding:10px 18px;border-radius:10px;font-weight:600;">Оплатить</a>';
+    actions+='<button onclick="cancelBooking('+b.id+')" style="background:#fff;color:#b00020;border:1px solid #f1c5c5;padding:10px 18px;border-radius:10px;font-weight:600;cursor:pointer;">Отменить</button>';
+  }
+  return '<div style="background:#fff;padding:22px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.08);border:'+(featured?'2px solid #38938B':'1px solid rgba(56,147,139,.12)')+';">'
+    +'<div style="display:flex;justify-content:space-between;gap:16px;margin-bottom:16px;align-items:flex-start;flex-wrap:wrap;">'
+    +'<div><div style="font-size:13px;color:#888;margin-bottom:6px;">'+(featured?'Ваше бронирование':'')+'</div>'
+    +'<div style="font-size:21px;font-weight:700;color:#333;">'+b.hotel_name+'</div>'
+    +'<div style="color:#6a7d7a;font-size:14px;">'+(b.hotel_destination||'')+'</div></div>'
+    +statusBadge(b.status)+'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;color:#444;font-size:14px;">'+rows+'</div>'
+    +(actions?('<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;">'+actions+'</div>'):'')
+    +'</div>';
+}
+async function cancelBooking(id){
+  if(!confirm('Отменить бронирование?')) return;
+  const token=localStorage.getItem('token');
+  const res=await fetch('/api/bookings/'+id+'/cancel',{method:'POST',headers:{Authorization:'Bearer '+token}});
+  if(res.ok) loadMyBookings();
+}
+async function loadMyBookings(){
+  const token=localStorage.getItem('token');
+  const list=document.getElementById('bookingsList');
+  const featuredId=new URLSearchParams(location.search).get('bookingId');
+  const icon=document.querySelector('.success-icon');
+  const bigTitle=document.querySelector('.container .success-title');
+  const bigMsg=document.querySelector('.success-message');
+  if(!featuredId){
+    if(icon) icon.style.display='none';
+    if(bigTitle) bigTitle.textContent='Мои бронирования';
+    if(bigMsg) bigMsg.style.display='none';
+  }
+  if(!token){ list.innerHTML='<div style="background:#fff;padding:24px;border-radius:14px;">Войдите в аккаунт, чтобы видеть бронирования.</div>'; return; }
+  try{
+    const res=await fetch('/api/bookings/my',{headers:{Authorization:'Bearer '+token}});
+    const data=await res.json();
+    if(!res.ok){ list.innerHTML='<div style="background:#fff;padding:24px;border-radius:14px;">Ошибка загрузки.</div>'; return; }
+    if(!data.bookings.length){ list.innerHTML='<div style="background:#fff;padding:24px;border-radius:14px;">Бронирований пока нет. <a href="hotels.html">Выбрать отель</a></div>'; return; }
+    let bookings=data.bookings.slice();
+    let featured=null;
+    if(featuredId){
+      const i=bookings.findIndex(b=>String(b.id)===String(featuredId));
+      if(i>-1){ featured=bookings.splice(i,1)[0]; }
+    }
+    let html='';
+    if(featured){ html+=bookingCard(featured,true); }
+    if(bookings.length){
+      html+='<h2 style="margin:20px 0 4px;font-size:20px;color:#333;">'+(featured?'Другие бронирования':'Все бронирования')+'</h2>';
+      html+=bookings.map(b=>bookingCard(b,false)).join('');
+    }
+    list.innerHTML=html;
+  }catch(e){ list.innerHTML='<div style="background:#fff;padding:24px;border-radius:14px;">Сервер недоступен.</div>'; }
+}
+document.addEventListener('DOMContentLoaded', loadMyBookings);
+</script>
+<script src="app.js"></script>
+</body>
+
+</html>

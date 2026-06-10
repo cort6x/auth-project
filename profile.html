@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой профиль — Свой турист</title>
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+    <div class="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <div class="profile-container">
+
+        <div class="user-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+
+        <!-- Имя и email подтягиваются через JS -->
+        <span class="profile-title" id="profileUsername">Мой профиль</span>
+        <span class="profile-email" id="profileEmail"></span>
+        
+        <button class="main-btn" onclick="openModal('Управление аккаунтом')">Управление аккаунтом</button>
+
+        <a class="main-btn" href="confirmation.html" style="display:block;text-align:center;text-decoration:none;margin-top:10px;background:#38938B;color:#fff;">📋 Мои бронирования</a>
+
+        <button class="menu-btn" onclick="openModal('Уведомления')">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            Уведомления
+        </button>
+        <button class="menu-btn" onclick="openModal('Не беспокоить')">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>
+            Не беспокоить
+        </button>
+
+        <div class="divider"></div>
+
+        <button class="menu-btn" onclick="openModal('Аккаунт')">
+            <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+            Аккаунт
+        </button>
+        <button class="menu-btn" onclick="openModal('Внешний вид')">
+            <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            Внешний вид
+        </button>
+        <button class="menu-btn" onclick="window.location.href='confirmation.html'">
+            <svg viewBox="0 0 24 24"><path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z"/></svg>
+            Ближайшие поездки
+        </button>
+        <button class="menu-btn" onclick="openModal('Избранное')">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            Избранное
+        </button>
+        <button class="menu-btn" onclick="openModal('Отзывы')">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12l-3-3-3 3V4h6v10z"/></svg>
+            Отзывы
+        </button>
+        <button class="menu-btn" onclick="openModal('Отправленные сообщения')">
+            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            Отправленные сообщения
+        </button>
+        <button class="menu-btn" onclick="openModal('Полученные сообщения')">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            Полученные сообщения
+        </button>
+
+        <div class="divider"></div>
+
+        <!-- ФИКС: кнопка выхода вынесена из <script> в HTML -->
+        <button class="logout-btn" onclick="logout()">
+            <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+            Выйти из аккаунта
+        </button>
+        
+
+        <!-- Ссылка на главную -->
+        <a href="index.html" class="back-to-main">← На главную</a>
+
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" id="modalContent">
+            <h3 id="modalTitle">Заголовок</h3>
+            <div id="modalBody"></div>
+            <button class="modal-close" onclick="closeModal()">Закрыть</button>
+        </div>
+    </div>
+
+<script>
+// Проверка авторизации при загрузке страницы
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'entrance.html';
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/profile', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error();
+
+        // Отображаем имя и email
+        const username = data.user.username || localStorage.getItem('username') || 'Пользователь';
+        const email = data.user.email || localStorage.getItem('email') || '';
+        document.getElementById('profileUsername').textContent = username;
+        document.getElementById('profileEmail').textContent = email;
+    } catch {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('email');
+        window.location.href = 'entrance.html';
+    }
+});
+
+function openModal(title) {
+    const overlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+
+    modalTitle.textContent = title;
+
+    let content = '';
+    switch(title) {
+        case 'Управление аккаунтом':
+            content = '<p>Здесь вы можете изменить настройки вашего аккаунта, обновить личную информацию и настроить безопасность.</p>';
+            content += '<div class="toggle-row"><span class="toggle-label">Email-уведомления</span><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>';
+            content += '<div class="toggle-row"><span class="toggle-label">SMS-уведомления</span><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></div>';
+            content += '<div class="toggle-row"><span class="toggle-label">Push-уведомления</span><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>';
+            break;
+        case 'Уведомления':
+            content = '<p>Настройте предпочтения уведомлений.</p>';
+            content += '<div class="toggle-row"><span class="toggle-label">Акции и скидки</span><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>';
+            content += '<div class="toggle-row"><span class="toggle-label">Новости</span><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></div>';
+            content += '<div class="toggle-row"><span class="toggle-label">Напоминания о поездках</span><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>';
+            break;
+        case 'Не беспокоить':
+            content = '<p>Включите режим "Не беспокоить", чтобы временно отключить все уведомления.</p>';
+            content += '<div class="toggle-row"><span class="toggle-label">Активировать</span><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></div>';
+            break;
+        case 'Аккаунт':
+            content = '<p>Управление данными вашего аккаунта.</p>';
+            content += '<div class="toggle-row"><span class="toggle-label">Двухфакторная аутентификация</span><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></div>';
+            break;
+        case 'Внешний вид':
+            content = '<p>Настройте внешний вид приложения. Выберите тему, размер шрифта и другие визуальные параметры.</p>';
+            break;
+        case 'Ближайшие поездки':
+            content = '<p>Здесь будут отображаться ваши предстоящие поездки. Пока у вас нет запланированных поездок.</p>';
+            break;
+        case 'Избранное':
+            content = '<p>Сохранённые отели и направления, которые вам понравились. Добавьте что-нибудь в избранное, нажав на сердечко.</p>';
+            break;
+        case 'Отзывы':
+            content = '<p>Ваши отзывы об отелях и экскурсиях. Спасибо, что делитесь впечатлениями!</p>';
+            break;
+        case 'Отправленные сообщения':
+            content = '<p>История отправленных вами сообщений.</p>';
+            break;
+        case 'Полученные сообщения':
+            content = '<p>Полученные сообщения от поддержки и других пользователей. У вас нет новых сообщений.</p>';
+            break;
+        default:
+            content = '<p>Раздел в разработке. Скоро здесь появится новая функциональность.</p>';
+    }
+
+    modalBody.innerHTML = content;
+    overlay.classList.add('active');
+}
+
+function closeModal(event) {
+    if (event && event.target !== document.getElementById('modalOverlay')) return;
+    document.getElementById('modalOverlay').classList.remove('active');
+}
+
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    window.location.href = 'entrance.html';
+}
+</script>
+
+<script src="app.js"></script>
+</body>
+</html>
