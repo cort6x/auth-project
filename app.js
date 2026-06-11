@@ -32,6 +32,84 @@
     });
   }
 
+  // ---------- ССЫЛКА «АДМИН» В НАВИГАЦИИ (только для администратора) ----------
+  async function injectAdminLink() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    let role = localStorage.getItem('role');
+    if (!role) {
+      // Узнаём роль один раз и кэшируем
+      try {
+        const res = await fetch('/api/profile', { headers: { Authorization: 'Bearer ' + token } });
+        if (res.ok) {
+          const data = await res.json();
+          role = data.user && data.user.role;
+          if (role) localStorage.setItem('role', role);
+        }
+      } catch (e) { /* офлайн — пропускаем */ }
+    }
+    if (role !== 'admin') return;
+    document.querySelectorAll('.main-nav').forEach((nav) => {
+      if (nav.querySelector('.admin-nav-link')) return;
+      const a = document.createElement('a');
+      a.href = 'admin.html';
+      a.className = 'nav-link admin-nav-link';
+      a.textContent = '⚙ Админ';
+      const authBtn = nav.querySelector('.auth-nav-btn');
+      if (authBtn) nav.insertBefore(a, authBtn); else nav.appendChild(a);
+    });
+    // в мобильное меню тоже
+    const ml = document.querySelector('#stMobileLinks');
+    if (ml && !ml.querySelector('.admin-nav-link')) {
+      const a = document.createElement('a');
+      a.href = 'admin.html'; a.className = 'admin-nav-link'; a.textContent = '⚙ Админ-панель';
+      ml.appendChild(a);
+    }
+  }
+
+  // ---------- МОБИЛЬНОЕ МЕНЮ (гамбургер) ----------
+  function buildMobileNav() {
+    const header = document.querySelector('.site-header .header-container');
+    const nav = header && header.querySelector('.main-nav');
+    if (!header || !nav || document.getElementById('stBurger')) return;
+
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username') || 'Войти';
+
+    // Кнопка-гамбургер в шапке
+    const burger = document.createElement('button');
+    burger.id = 'stBurger';
+    burger.className = 'st-burger';
+    burger.setAttribute('aria-label', 'Открыть меню');
+    burger.innerHTML = '<span></span><span></span><span></span>';
+    header.appendChild(burger);
+
+    // Выдвижная панель
+    const drawer = document.createElement('div');
+    drawer.id = 'stDrawer';
+    drawer.className = 'st-drawer';
+    const links = Array.from(nav.querySelectorAll('a.nav-link'))
+      .map((a) => `<a href="${a.getAttribute('href')}">${a.textContent.trim()}</a>`).join('');
+    drawer.innerHTML = `
+      <div class="st-drawer-panel" role="dialog" aria-label="Меню">
+        <div class="st-drawer-head">
+          <span class="st-drawer-logo">Свой турист</span>
+          <button class="st-drawer-close" aria-label="Закрыть">×</button>
+        </div>
+        <nav class="st-drawer-links" id="stMobileLinks">
+          ${links}
+          <a href="${token ? 'profile.html' : 'entrance.html'}" class="st-drawer-cta">${token ? '👤 ' + username : 'Войти'}</a>
+        </nav>
+      </div>`;
+    document.body.appendChild(drawer);
+
+    const close = () => { drawer.classList.remove('open'); document.body.style.overflow = ''; };
+    const open = () => { drawer.classList.add('open'); document.body.style.overflow = 'hidden'; };
+    burger.addEventListener('click', open);
+    drawer.querySelector('.st-drawer-close').addEventListener('click', close);
+    drawer.addEventListener('click', (e) => { if (e.target === drawer) close(); });
+  }
+
   // ---------- ЧАТБОТ ----------
   function currentPage() {
     const p = (location.pathname.split('/').pop() || 'index.html').replace('.html', '');
@@ -166,6 +244,8 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     setupAuthButtons();
+    buildMobileNav();
+    injectAdminLink();
     buildChat();
   });
 })();

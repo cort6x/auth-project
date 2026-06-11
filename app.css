@@ -90,19 +90,58 @@
 .st-dot:nth-child(3) { animation-delay: .4s; }
 @keyframes stbounce { 0%,60%,100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
 
+/* ===================== ГАМБУРГЕР + ВЫДВИЖНОЕ МЕНЮ ===================== */
+.st-burger {
+  display: none; margin-left: auto; width: 44px; height: 44px; border: none;
+  background: none; cursor: pointer; flex-direction: column; justify-content: center;
+  align-items: center; gap: 5px; padding: 0;
+}
+.st-burger span { display: block; width: 24px; height: 2px; background: #2c3e3b; border-radius: 2px; transition: .2s; }
+
+.st-drawer {
+  position: fixed; inset: 0; background: rgba(15,31,29,.5); z-index: 10000;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.st-drawer.open { opacity: 1; pointer-events: auto; }
+.st-drawer-panel {
+  position: absolute; top: 0; right: 0; height: 100%; width: 82%; max-width: 320px;
+  background: #fff; box-shadow: -8px 0 32px rgba(0,0,0,.2); transform: translateX(100%);
+  transition: transform .25s ease; display: flex; flex-direction: column;
+}
+.st-drawer.open .st-drawer-panel { transform: translateX(0); }
+.st-drawer-head { display: flex; align-items: center; padding: 18px 20px; border-bottom: 1px solid #eef3f2; }
+.st-drawer-logo { font-size: 19px; font-weight: 800; color: var(--st-teal); }
+.st-drawer-close { margin-left: auto; background: none; border: none; font-size: 30px; line-height: 1; color: #6a7d7a; cursor: pointer; }
+.st-drawer-links { display: flex; flex-direction: column; padding: 10px 0; overflow-y: auto; }
+.st-drawer-links a {
+  padding: 15px 22px; font-size: 16px; color: #2c3e3b; text-decoration: none; font-weight: 500;
+  border-bottom: 1px solid #f3f7f6;
+}
+.st-drawer-links a:hover { background: #f4f8f7; }
+.st-drawer-links .st-drawer-cta {
+  margin: 16px 20px; padding: 14px; text-align: center; background: var(--st-teal); color: #fff;
+  border-radius: 12px; font-weight: 700; border: none;
+}
+.st-drawer-links .admin-nav-link { color: var(--st-teal-dark); font-weight: 700; }
+
 /* ===================== ГЛОБАЛЬНАЯ АДАПТИВНОСТЬ ===================== */
 * { box-sizing: border-box; }
 img, svg, video { max-width: 100%; }
 
-@media (max-width: 768px) {
-  /* Шапки/навигация переносятся и не выходят за экран */
-  .site-header .header-container,
-  .navbar {
-    flex-wrap: wrap !important; gap: 8px 12px !important;
-    padding-left: 14px !important; padding-right: 14px !important;
+@media (max-width: 860px) {
+  /* Десктоп-навигация прячется, появляется гамбургер */
+  .site-header .header-container {
+    flex-direction: row !important; flex-wrap: nowrap !important; height: 62px !important;
+    align-items: center !important; gap: 12px !important;
+    padding-left: 16px !important; padding-right: 12px !important;
   }
-  .main-nav { flex-wrap: wrap !important; gap: 8px 14px !important; row-gap: 6px !important; }
-  .main-nav .nav-link { font-size: 14px !important; }
+  .site-header .main-nav { display: none !important; }
+  .st-burger { display: flex !important; }
+}
+
+@media (max-width: 768px) {
+  /* Вторичный navbar (поиск/прочее) не выходит за экран */
+  .navbar { flex-wrap: wrap !important; gap: 8px 12px !important; padding-left: 14px !important; padding-right: 14px !important; }
 
   /* Контейнеры по ширине экрана */
   .container { padding-left: 16px !important; padding-right: 16px !important; }

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель — Свой турист</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-shell" id="shell">
+    <div class="side-backdrop" onclick="closeNav()"></div>
+
+    <aside class="admin-side">
+      <div class="admin-brand">
+        <span class="dot"></span>
+        <span>Свой турист<small>Панель администратора</small></span>
+      </div>
+      <nav class="admin-nav" id="adminNav">
+        <button class="active" data-sec="dashboard" onclick="showSection('dashboard')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Обзор
+        </button>
+        <button data-sec="bookings" onclick="showSection('bookings')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+          Бронирования
+        </button>
+        <button data-sec="hotels" onclick="showSection('hotels')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z"/></svg>
+          Отели
+        </button>
+        <button data-sec="users" onclick="showSection('users')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          Пользователи
+        </button>
+      </nav>
+      <div class="admin-side-foot">
+        <a href="index.html">← На сайт</a>
+        <a href="#" onclick="adminLogout();return false;">Выйти из аккаунта</a>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <button class="admin-burger" onclick="toggleNav()" aria-label="Меню">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+        <h1 id="pageTitle">Обзор</h1>
+        <div class="admin-whoami">
+          <span id="whoName">—</span>
+          <div class="who-ava" id="whoAva">A</div>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- ОБЗОР -->
+        <section class="admin-section active" id="sec-dashboard">
+          <div class="stat-grid" id="statGrid">
+            <div class="loading">Загрузка статистики…</div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Последняя активность</h2><div class="spacer"></div>
+              <button class="btn ghost sm" onclick="showSection('bookings')">Все бронирования →</button>
+            </div>
+            <div class="table-scroll">
+              <table class="data" id="recentTable">
+                <thead><tr><th>Код</th><th>Отель</th><th>Клиент</th><th>Сумма</th><th>Статус</th></tr></thead>
+                <tbody><tr><td colspan="5" class="loading">Загрузка…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- БРОНИРОВАНИЯ -->
+        <section class="admin-section" id="sec-bookings">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Все бронирования</h2>
+              <div class="spacer"></div>
+              <div class="chips" id="bookingFilters">
+                <button class="chip active" data-st="all" onclick="filterBookings('all',this)">Все</button>
+                <button class="chip" data-st="pending" onclick="filterBookings('pending',this)">Ожидают оплаты</button>
+                <button class="chip" data-st="paid" onclick="filterBookings('paid',this)">Оплачены</button>
+                <button class="chip" data-st="cancelled" onclick="filterBookings('cancelled',this)">Отменены</button>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table class="data" id="bookingsTable">
+                <thead><tr><th>Код</th><th>Отель</th><th>Клиент</th><th>Даты</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr></thead>
+                <tbody><tr><td colspan="7" class="loading">Загрузка…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ОТЕЛИ -->
+        <section class="admin-section" id="sec-hotels">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Каталог отелей</h2>
+              <div class="spacer"></div>
+              <button class="btn" onclick="openHotelModal()">+ Добавить отель</button>
+            </div>
+            <div class="table-scroll">
+              <table class="data" id="hotelsTable">
+                <thead><tr><th>Название</th><th>Направление</th><th>★</th><th>Цена/ночь</th><th>Действия</th></tr></thead>
+                <tbody><tr><td colspan="5" class="loading">Загрузка…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ПОЛЬЗОВАТЕЛИ -->
+        <section class="admin-section" id="sec-users">
+          <div class="panel">
+            <div class="panel-head"><h2>Пользователи</h2></div>
+            <div class="table-scroll">
+              <table class="data" id="usersTable">
+                <thead><tr><th>Имя</th><th>Email</th><th>Роль</th><th>Броней</th><th>Регистрация</th></tr></thead>
+                <tbody><tr><td colspan="5" class="loading">Загрузка…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка деталей брони -->
+  <div class="modal-overlay" id="bookingModal">
+    <div class="modal">
+      <div class="modal-head"><h3>Бронирование</h3><button class="x" onclick="closeModal('bookingModal')">×</button></div>
+      <div class="modal-body" id="bookingDetail"></div>
+      <div class="modal-foot" id="bookingActions"></div>
+    </div>
+  </div>
+
+  <!-- Модалка отеля (добавление/редактирование) -->
+  <div class="modal-overlay" id="hotelModal">
+    <div class="modal">
+      <div class="modal-head"><h3 id="hotelModalTitle">Новый отель</h3><button class="x" onclick="closeModal('hotelModal')">×</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="hId">
+        <div class="field"><label>Название *</label><input id="hName" placeholder="Например, Sunset Town Resort"></div>
+        <div class="field-row">
+          <div class="field"><label>Направление *</label><input id="hDest" placeholder="Фукуок"></div>
+          <div class="field"><label>Город</label><input id="hCity" placeholder="Фукуок"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Рейтинг (0–5)</label><input id="hStar" type="number" step="0.1" min="0" max="5" value="4.5"></div>
+          <div class="field"><label>Цена за ночь, ₽ *</label><input id="hPrice" type="number" min="0" value="9000"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Налог (доля, 0.10 = 10%)</label><input id="hTax" type="number" step="0.01" min="0" max="1" value="0.1"></div>
+          <div class="field"><label>Сервисный сбор, ₽</label><input id="hFee" type="number" min="0" value="900"></div>
+        </div>
+        <div class="field"><label>URL изображения</label><input id="hImage" placeholder="https://…"></div>
+        <div class="field"><label>Описание</label><textarea id="hDesc" placeholder="Короткое описание отеля"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn ghost" onclick="closeModal('hotelModal')">Отмена</button>
+        <button class="btn" id="hotelSaveBtn" onclick="saveHotel()">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  const TOKEN = localStorage.getItem('token');
+  const H = TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {};
+  const RU = (n) => Number(n || 0).toLocaleString('ru-RU');
+  const esc = (s) => { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; };
+  let bookingFilter = 'all';
+
+  function toast(msg, isErr) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'toast show' + (isErr ? ' err' : '');
+    setTimeout(() => t.classList.remove('show'), 2600);
+  }
+  function badge(s) {
+    const map = { paid: 'Оплачено', pending: 'Ожидает', cancelled: 'Отменено' };
+    return `<span class="badge ${s}">${map[s] || s}</span>`;
+  }
+
+  // ---- Доступ только для администратора ----
+  async function guard() {
+    if (!TOKEN) { location.href = 'entrance.html'; return false; }
+    try {
+      const res = await fetch('/api/profile', { headers: H });
+      const data = await res.json();
+      if (!res.ok || !data.user || data.user.role !== 'admin') {
+        document.body.innerHTML = '<div style="max-width:440px;margin:80px auto;text-align:center;font-family:Inter,sans-serif;">'
+          + '<h2 style="color:#1f2d2b;">Доступ запрещён</h2>'
+          + '<p style="color:#6a7d7a;">Эта страница доступна только администраторам.</p>'
+          + '<a href="index.html" style="display:inline-block;margin-top:12px;background:#38938B;color:#fff;padding:11px 20px;border-radius:10px;text-decoration:none;">На главную</a></div>';
+        return false;
+      }
+      const name = data.user.username || 'Админ';
+      document.getElementById('whoName').textContent = name;
+      document.getElementById('whoAva').textContent = name.slice(0, 1).toUpperCase();
+      return true;
+    } catch (e) { location.href = 'entrance.html'; return false; }
+  }
+
+  // ---- Навигация ----
+  function showSection(name) {
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-' + name).classList.add('active');
+    document.querySelectorAll('.admin-nav button').forEach(b => b.classList.toggle('active', b.dataset.sec === name));
+    const titles = { dashboard: 'Обзор', bookings: 'Бронирования', hotels: 'Отели', users: 'Пользователи' };
+    document.getElementById('pageTitle').textContent = titles[name];
+    closeNav();
+    if (name === 'bookings') loadBookings();
+    if (name === 'hotels') loadHotels();
+    if (name === 'users') loadUsers();
+  }
+  function toggleNav() { document.getElementById('shell').classList.toggle('nav-open'); }
+  function closeNav() { document.getElementById('shell').classList.remove('nav-open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+  function adminLogout() { localStorage.clear(); location.href = 'entrance.html'; }
+
+  // ---- Обзор ----
+  async function loadStats() {
+    try {
+      const res = await fetch('/api/admin/stats', { headers: H });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      const attClass = d.attention > 0 ? 'attention has' : 'attention';
+      document.getElementById('statGrid').innerHTML = `
+        <div class="stat-card accent"><div class="label">Выручка (оплачено)</div><div class="value">${RU(d.revenue)} ₽</div><div class="sub">${d.byStatus.paid || 0} оплаченных броней</div></div>
+        <div class="stat-card"><div class="label">Бронирований</div><div class="value">${RU(d.bookings)}</div><div class="sub">за всё время</div></div>
+        <div class="stat-card ${attClass}"><div class="label">Требуют внимания</div><div class="value">${RU(d.attention)}</div><div class="sub">ожидают оплаты</div></div>
+        <div class="stat-card"><div class="label">Отелей</div><div class="value">${RU(d.hotels)}</div><div class="sub">в каталоге</div></div>
+        <div class="stat-card"><div class="label">Пользователей</div><div class="value">${RU(d.users)}</div><div class="sub">зарегистрировано</div></div>`;
+      const tb = document.querySelector('#recentTable tbody');
+      tb.innerHTML = (d.recent || []).length
+        ? d.recent.map(b => `<tr><td><strong>${esc(b.booking_code)}</strong></td><td>${esc(b.hotel_name)}</td><td>${esc(b.user_name)}</td><td>${RU(b.total_price)} ₽</td><td>${badge(b.status)}</td></tr>`).join('')
+        : '<tr><td colspan="5" class="empty">Бронирований пока нет.</td></tr>';
+    } catch (e) {
+      document.getElementById('statGrid').innerHTML = '<div class="empty">Не удалось загрузить статистику.</div>';
+    }
+  }
+
+  // ---- Бронирования ----
+  function filterBookings(st, el) {
+    bookingFilter = st;
+    document.querySelectorAll('#bookingFilters .chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    loadBookings();
+  }
+  async function loadBookings() {
+    const tb = document.querySelector('#bookingsTable tbody');
+    tb.innerHTML = '<tr><td colspan="7" class="loading">Загрузка…</td></tr>';
+    try {
+      const res = await fetch('/api/admin/bookings?status=' + bookingFilter, { headers: H });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      if (!d.bookings.length) { tb.innerHTML = '<tr><td colspan="7" class="empty">Нет бронирований в этой категории.</td></tr>'; return; }
+      tb.innerHTML = d.bookings.map(b => `
+        <tr>
+          <td><strong>${esc(b.booking_code)}</strong></td>
+          <td class="wrap">${esc(b.hotel_name)}</td>
+          <td>${esc(b.user_name)}<br><span style="color:#6a7d7a;font-size:12px;">${esc(b.user_email)}</span></td>
+          <td>${esc(b.check_in)} → ${esc(b.check_out)}</td>
+          <td>${RU(b.total_price)} ₽</td>
+          <td>${badge(b.status)}</td>
+          <td><div class="row-actions"><button class="btn ghost sm" onclick="openBooking(${b.id})">Детали</button></div></td>
+        </tr>`).join('');
+    } catch (e) {
+      tb.innerHTML = '<tr><td colspan="7" class="empty">Ошибка загрузки.</td></tr>';
+    }
+  }
+  async function openBooking(id) {
+    try {
+      const res = await fetch('/api/admin/bookings/' + id, { headers: H });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      const b = d.booking;
+      const f = (l, v) => `<div><div class="dl">${l}</div><div class="dv">${v}</div></div>`;
+      document.getElementById('bookingDetail').innerHTML = `
+        <div class="detail-grid">
+          ${f('Код брони', esc(b.booking_code))}
+          ${f('Статус', badge(b.status))}
+          ${f('Отель', esc(b.hotel_name))}
+          ${f('Направление', esc(b.hotel_destination || '—'))}
+          ${f('Клиент', esc(b.user_name))}
+          ${f('Email', esc(b.user_email))}
+          ${f('Заезд', esc(b.check_in))}
+          ${f('Выезд', esc(b.check_out))}
+          ${f('Гостей', b.adults + ' взр.' + (b.children ? ', ' + b.children + ' дет.' : ''))}
+          ${f('Номеров', b.rooms)}
+          ${f('Ночей', b.nights)}
+          ${f('Итого', '<strong>' + RU(b.total_price) + ' ₽</strong>')}
+        </div>`;
+      const actions = [];
+      if (b.status !== 'paid') actions.push(`<button class="btn" onclick="setStatus(${b.id},'paid')">Отметить оплаченным</button>`);
+      if (b.status !== 'pending') actions.push(`<button class="btn ghost" onclick="setStatus(${b.id},'pending')">Вернуть в ожидание</button>`);
+      if (b.status !== 'cancelled') actions.push(`<button class="btn danger" onclick="setStatus(${b.id},'cancelled')">Отменить бронь</button>`);
+      document.getElementById('bookingActions').innerHTML = actions.join('');
+      document.getElementById('bookingModal').classList.add('active');
+    } catch (e) { toast('Не удалось открыть бронь', true); }
+  }
+  async function setStatus(id, status) {
+    try {
+      const res = await fetch('/api/admin/bookings/' + id + '/status', {
+        method: 'PATCH', headers: { ...H, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      toast('Статус обновлён');
+      closeModal('bookingModal');
+      loadBookings(); loadStats();
+    } catch (e) { toast(e.message || 'Ошибка', true); }
+  }
+
+  // ---- Отели ----
+  async function loadHotels() {
+    const tb = document.querySelector('#hotelsTable tbody');
+    tb.innerHTML = '<tr><td colspan="5" class="loading">Загрузка…</td></tr>';
+    try {
+      const res = await fetch('/api/hotels', { headers: H });
+      const d = await res.json();
+      window._hotels = d.hotels || [];
+      if (!window._hotels.length) { tb.innerHTML = '<tr><td colspan="5" class="empty">Отелей нет.</td></tr>'; return; }
+      tb.innerHTML = window._hotels.map(h => `
+        <tr>
+          <td class="wrap"><strong>${esc(h.name)}</strong></td>
+          <td>${esc(h.destination)}</td>
+          <td>${Number(h.star_rating).toFixed(1)}</td>
+          <td>${RU(h.base_price)} ₽</td>
+          <td><div class="row-actions">
+            <button class="btn ghost sm" onclick="openHotelModal(${h.id})">Изменить</button>
+            <button class="btn danger sm" onclick="deleteHotel(${h.id})">Удалить</button>
+          </div></td>
+        </tr>`).join('');
+    } catch (e) { tb.innerHTML = '<tr><td colspan="5" class="empty">Ошибка загрузки.</td></tr>'; }
+  }
+  function openHotelModal(id) {
+    const set = (k, v) => document.getElementById(k).value = v;
+    if (id && window._hotels) {
+      const h = window._hotels.find(x => x.id === id);
+      document.getElementById('hotelModalTitle').textContent = 'Редактирование отеля';
+      set('hId', h.id); set('hName', h.name); set('hDest', h.destination); set('hCity', h.city || '');
+      set('hStar', h.star_rating); set('hPrice', h.base_price); set('hTax', h.tax_rate);
+      set('hFee', h.service_fee); set('hImage', h.image || ''); set('hDesc', h.description || '');
+    } else {
+      document.getElementById('hotelModalTitle').textContent = 'Новый отель';
+      set('hId', ''); set('hName', ''); set('hDest', ''); set('hCity', '');
+      set('hStar', '4.5'); set('hPrice', '9000'); set('hTax', '0.1'); set('hFee', '900');
+      set('hImage', ''); set('hDesc', '');
+    }
+    document.getElementById('hotelModal').classList.add('active');
+  }
+  async function saveHotel() {
+    const g = (k) => document.getElementById(k).value.trim();
+    const id = g('hId');
+    const payload = {
+      name: g('hName'), destination: g('hDest'), city: g('hCity'),
+      star_rating: g('hStar'), base_price: g('hPrice'), tax_rate: g('hTax'),
+      service_fee: g('hFee'), image: g('hImage'), description: g('hDesc'),
+    };
+    if (!payload.name || !payload.destination) { toast('Заполните название и направление', true); return; }
+    const btn = document.getElementById('hotelSaveBtn'); btn.disabled = true; btn.textContent = 'Сохранение…';
+    try {
+      const url = id ? '/api/admin/hotels/' + id : '/api/admin/hotels';
+      const method = id ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: { ...H, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      toast(id ? 'Отель обновлён' : 'Отель добавлен');
+      closeModal('hotelModal'); loadHotels(); loadStats();
+    } catch (e) { toast(e.message || 'Ошибка', true); }
+    finally { btn.disabled = false; btn.textContent = 'Сохранить'; }
+  }
+  async function deleteHotel(id) {
+    if (!confirm('Удалить отель из каталога?')) return;
+    try {
+      const res = await fetch('/api/admin/hotels/' + id, { method: 'DELETE', headers: H });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      toast('Отель удалён'); loadHotels(); loadStats();
+    } catch (e) { toast(e.message || 'Ошибка', true); }
+  }
+
+  // ---- Пользователи ----
+  async function loadUsers() {
+    const tb = document.querySelector('#usersTable tbody');
+    tb.innerHTML = '<tr><td colspan="5" class="loading">Загрузка…</td></tr>';
+    try {
+      const res = await fetch('/api/admin/users', { headers: H });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      tb.innerHTML = d.users.map(u => `
+        <tr>
+          <td><strong>${esc(u.username)}</strong></td>
+          <td>${esc(u.email)}</td>
+          <td><span class="badge role-${u.role}">${u.role === 'admin' ? 'Админ' : 'Клиент'}</span></td>
+          <td>${u.bookings_count}</td>
+          <td>${esc((u.created_at || '').slice(0, 10))}</td>
+        </tr>`).join('');
+    } catch (e) { tb.innerHTML = '<tr><td colspan="5" class="empty">Ошибка загрузки.</td></tr>'; }
+  }
+
+  document.querySelectorAll('.modal-overlay').forEach(o =>
+    o.addEventListener('click', (e) => { if (e.target === o) o.classList.remove('active'); }));
+
+  (async function init() {
+    if (await guard()) loadStats();
+  })();
+  </script>
+</body>
+</html>

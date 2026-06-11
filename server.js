@@ -16,18 +16,18 @@ const ROOM_CAPACITY = 10; // условный фонд номеров на от�
 app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
-
+ 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/entrance.html', (req, res) => res.sendFile(path.join(__dirname, 'entrance.html')));
 app.get('/profile.html', (req, res) => res.sendFile(path.join(__dirname, 'profile.html')));
-
+ 
 // ---------- БАЗА ДАННЫХ (3 таблицы: users, hotels, bookings) ----------
 const db = new sqlite3.Database('./users.db', (err) => {
   if (err) return console.error('Ошибка подключения к БД:', err.message);
   console.log('✅ Подключено к SQLite');
   initDatabase();
 });
-
+ 
 function initDatabase() {
   db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS users (
@@ -75,10 +75,43 @@ function initDatabase() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY(user_id) REFERENCES users(id),
       FOREIGN KEY(hotel_id) REFERENCES hotels(id)
-    )`, () => seedHotels());
+    )`, () => { ensureUserRoleColumn(); seedHotels(); });
   });
 }
-
+ 
+// Расширяем существующую таблицу users полем role (без новых таблиц).
+// Роль хранится прямо в users: 'user' | 'admin'.
+function ensureUserRoleColumn() {
+  db.all('PRAGMA table_info(users)', (err, cols) => {
+    if (err) return;
+    const hasRole = (cols || []).some((c) => c.name === 'role');
+    const finish = () => seedAdmin();
+    if (hasRole) return finish();
+    db.run("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'", () => finish());
+  });
+}
+ 
+// Гарантируем наличие администратора (логин/пароль см. README).
+function seedAdmin() {
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@svoy-turist.ru';
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin1234';
+  db.get('SELECT id, role FROM users WHERE email = ?', [ADMIN_EMAIL], async (err, row) => {
+    if (err) return;
+    try {
+      if (!row) {
+        const hashed = await bcrypt.hash(ADMIN_PASSWORD, 10);
+        db.run(
+          "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, 'admin')",
+          ['Администратор', ADMIN_EMAIL, hashed],
+          () => console.log(`👑 Создан администратор: ${ADMIN_EMAIL}`)
+        );
+      } else if (row.role !== 'admin') {
+        db.run("UPDATE users SET role = 'admin' WHERE id = ?", [row.id]);
+      }
+    } catch (_) {}
+  });
+}
+ 
 function seedHotels() {
   const hotels = [
     ['occidental-punta-cana','Occidental Punta Cana','Пунта-Кана','Пунта-Кана','La Altagracia',4.6,12500,0.12,1200,'https://ak-d.tripcdn.com/images/22071a0000019bzi3C242_R_960_660_R5_D.jpg','Курортный отель «всё включено» рядом с пляжами Бавао и Кортесито: бассейны, рестораны и прямой выход к морю.'],
@@ -97,7 +130,7 @@ function seedHotels() {
     }
   });
 }
-
+ 
 // ---------- ВСПОМОГАТЕЛЬНОЕ ----------
 function authRequired(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
@@ -116,10 +149,22 @@ function optionalAuth(req, res, next) {
     next();
   });
 }
+// Доступ только для администратора. Роль перепроверяется по БД,
+// чтобы старый токен нельзя было использовать после смены прав.
+function adminRequired(req, res, next) {
+  authRequired(req, res, () => {
+    db.get('SELECT role FROM users WHERE id = ?', [req.user.userId], (err, row) => {
+      if (err) return res.status(500).json({ error: 'Ошибка сервера' });
+      if (!row || row.role !== 'admin') return res.status(403).json({ error: 'Доступ только для администратора' });
+      req.user.role = 'admin';
+      next();
+    });
+  });
+}
 const dbGet = (sql, p = []) => new Promise((res, rej) => db.get(sql, p, (e, r) => e ? rej(e) : res(r)));
 const dbAll = (sql, p = []) => new Promise((res, rej) => db.all(sql, p, (e, r) => e ? rej(e) : res(r)));
 const dbRun = (sql, p = []) => new Promise((res, rej) => db.run(sql, p, function (e) { e ? rej(e) : res(this); }));
-
+ 
 // ---------- АВТОРИЗАЦИЯ ----------
 app.post('/api/register', async (req, res) => {
   try {
@@ -130,13 +175,13 @@ app.post('/api/register', async (req, res) => {
     if (exists) return res.status(400).json({ error: 'Email или имя уже зарегистрированы' });
     const hashed = await bcrypt.hash(password, 10);
     const r = await dbRun('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, hashed]);
-    const token = jwt.sign({ userId: r.lastID, username, email }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ success: true, message: 'Регистрация успешна!', token, user: { id: r.lastID, username, email } });
+    const token = jwt.sign({ userId: r.lastID, username, email, role: 'user' }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ success: true, message: 'Регистрация успешна!', token, user: { id: r.lastID, username, email, role: 'user' } });
   } catch (e) {
     res.status(500).json({ error: 'Ошибка сервера' });
   }
 });
-
+ 
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Заполните все поля' });
@@ -145,13 +190,19 @@ app.post('/api/login', (req, res) => {
     if (!user) return res.status(400).json({ error: 'Неверный email или пароль' });
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(400).json({ error: 'Неверный email или пароль' });
-    const token = jwt.sign({ userId: user.id, username: user.username, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ success: true, token, user: { id: user.id, username: user.username, email: user.email } });
+    const role = user.role || 'user';
+    const token = jwt.sign({ userId: user.id, username: user.username, email: user.email, role }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ success: true, token, user: { id: user.id, username: user.username, email: user.email, role } });
   });
 });
-
-app.get('/api/profile', authRequired, (req, res) => res.json({ user: req.user }));
-
+ 
+app.get('/api/profile', authRequired, (req, res) => {
+  db.get('SELECT id, username, email, role FROM users WHERE id = ?', [req.user.userId], (err, row) => {
+    if (err || !row) return res.json({ user: req.user });
+    res.json({ user: { ...req.user, ...row } });
+  });
+});
+ 
 // ---------- ОТЕЛИ ----------
 app.get('/api/hotels', async (req, res) => {
   try {
@@ -174,7 +225,7 @@ app.get('/api/hotels', async (req, res) => {
     res.status(500).json({ error: 'Ошибка получения отелей' });
   }
 });
-
+ 
 app.get('/api/hotels/:slug', async (req, res) => {
   try {
     const row = await dbGet('SELECT * FROM hotels WHERE slug = ?', [req.params.slug]);
@@ -184,7 +235,7 @@ app.get('/api/hotels/:slug', async (req, res) => {
     res.status(500).json({ error: 'Ошибка получения отеля' });
   }
 });
-
+ 
 // ---------- РАСЧЁТ + ДОСТУПНОСТЬ (без сохранения) ----------
 app.post('/api/bookings/quote', async (req, res) => {
   try {
@@ -193,10 +244,10 @@ app.post('/api/bookings/quote', async (req, res) => {
       ? await dbGet('SELECT * FROM hotels WHERE slug = ?', [slug])
       : await dbGet('SELECT * FROM hotels WHERE id = ?', [hotel_id]);
     if (!hotel) return res.status(404).json({ error: 'Отель не найден' });
-
+ 
     const quote = computeQuote(hotel, req.body);
     if (quote.error) return res.status(400).json({ error: quote.error });
-
+ 
     const existing = await dbAll(
       "SELECT check_in, check_out, rooms, status FROM bookings WHERE hotel_id = ? AND status != 'cancelled'",
       [hotel.id]
@@ -207,7 +258,7 @@ app.post('/api/bookings/quote', async (req, res) => {
     res.status(500).json({ error: 'Ошибка расчёта' });
   }
 });
-
+ 
 // ---------- СОЗДАНИЕ БРОНИ (сервер — источник истины) ----------
 app.post('/api/bookings', authRequired, async (req, res) => {
   try {
@@ -216,18 +267,18 @@ app.post('/api/bookings', authRequired, async (req, res) => {
       ? await dbGet('SELECT * FROM hotels WHERE slug = ?', [slug])
       : await dbGet('SELECT * FROM hotels WHERE id = ?', [hotel_id]);
     if (!hotel) return res.status(404).json({ error: 'Отель не найден' });
-
+ 
     // Цена пересчитывается на сервере, фронту не доверяем.
     const quote = computeQuote(hotel, req.body);
     if (quote.error) return res.status(400).json({ error: quote.error });
-
+ 
     const existing = await dbAll(
       "SELECT check_in, check_out, rooms, status FROM bookings WHERE hotel_id = ? AND status != 'cancelled'",
       [hotel.id]
     );
     const avail = checkAvailability(existing, { check_in, check_out, rooms: quote.rooms }, ROOM_CAPACITY);
     if (!avail.available) return res.status(409).json({ error: avail.reason || 'Нет свободных номеров на выбранные даты.' });
-
+ 
     const code = 'ST-' + Math.random().toString(36).slice(2, 8).toUpperCase();
     const r = await dbRun(
       `INSERT INTO bookings (user_id, hotel_id, check_in, check_out, adults, children, rooms, guests_name, guests_phone, guests_email, nights, nightly_rate, subtotal, taxes, service_fee, total_price, status, booking_code)
@@ -241,7 +292,7 @@ app.post('/api/bookings', authRequired, async (req, res) => {
     res.status(500).json({ error: 'Ошибка создания бронирования' });
   }
 });
-
+ 
 // ---------- МОИ БРОНИ ----------
 app.get('/api/bookings/my', authRequired, async (req, res) => {
   try {
@@ -256,7 +307,7 @@ app.get('/api/bookings/my', authRequired, async (req, res) => {
     res.status(500).json({ error: 'Ошибка получения бронирований' });
   }
 });
-
+ 
 app.get('/api/bookings/:id', authRequired, async (req, res) => {
   try {
     const row = await dbGet(
@@ -271,14 +322,14 @@ app.get('/api/bookings/:id', authRequired, async (req, res) => {
     res.status(500).json({ error: 'Ошибка получения бронирования' });
   }
 });
-
+ 
 // ---------- ОПЛАТА (mock, архитектурно готова к эквайрингу) ----------
 app.post('/api/bookings/:id/pay', authRequired, async (req, res) => {
   try {
     const booking = await dbGet('SELECT * FROM bookings WHERE id = ? AND user_id = ?', [req.params.id, req.user.userId]);
     if (!booking) return res.status(404).json({ error: 'Бронирование не найдено' });
     if (booking.status === 'paid') return res.json({ success: true, booking: { id: booking.id, status: 'paid' } });
-
+ 
     // Здесь была бы интеграция с платёжным шлюзом. Сейчас — имитация успешной оплаты.
     await dbRun("UPDATE bookings SET status = 'paid' WHERE id = ?", [booking.id]);
     res.json({ success: true, booking: { id: booking.id, status: 'paid', booking_code: booking.booking_code } });
@@ -286,7 +337,7 @@ app.post('/api/bookings/:id/pay', authRequired, async (req, res) => {
     res.status(500).json({ error: 'Ошибка оплаты' });
   }
 });
-
+ 
 // ---------- ОТМЕНА ----------
 app.post('/api/bookings/:id/cancel', authRequired, async (req, res) => {
   try {
@@ -298,7 +349,163 @@ app.post('/api/bookings/:id/cancel', authRequired, async (req, res) => {
     res.status(500).json({ error: 'Ошибка отмены' });
   }
 });
-
+ 
+// ---------- АДМИН-ПАНЕЛЬ (роль admin, поверх 3 таблиц) ----------
+app.get('/admin.html', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+ 
+// Сводная статистика для дашборда
+app.get('/api/admin/stats', adminRequired, async (req, res) => {
+  try {
+    const [users, hotels, bookings] = await Promise.all([
+      dbGet('SELECT COUNT(*) AS c FROM users'),
+      dbGet('SELECT COUNT(*) AS c FROM hotels'),
+      dbAll('SELECT status, COUNT(*) AS c, COALESCE(SUM(total_price),0) AS sum FROM bookings GROUP BY status'),
+    ]);
+    const byStatus = { pending: 0, paid: 0, cancelled: 0 };
+    let totalBookings = 0;
+    let revenue = 0; // выручка = оплаченные брони
+    bookings.forEach((b) => {
+      byStatus[b.status] = b.c;
+      totalBookings += b.c;
+      if (b.status === 'paid') revenue += b.sum;
+    });
+    const recent = await dbAll(
+      `SELECT b.id, b.booking_code, b.status, b.total_price, b.created_at,
+              h.name AS hotel_name, u.username AS user_name
+       FROM bookings b JOIN hotels h ON h.id = b.hotel_id JOIN users u ON u.id = b.user_id
+       ORDER BY b.created_at DESC LIMIT 6`
+    );
+    res.json({
+      users: users.c, hotels: hotels.c, bookings: totalBookings,
+      byStatus, revenue, recent,
+      attention: byStatus.pending || 0, // брони, ожидающие оплаты
+    });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка получения статистики' });
+  }
+});
+ 
+// Пользователи
+app.get('/api/admin/users', adminRequired, async (req, res) => {
+  try {
+    const rows = await dbAll(
+      `SELECT u.id, u.username, u.email, COALESCE(u.role,'user') AS role, u.created_at,
+              COUNT(b.id) AS bookings_count
+       FROM users u LEFT JOIN bookings b ON b.user_id = u.id
+       GROUP BY u.id ORDER BY u.created_at DESC`
+    );
+    res.json({ users: rows });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка получения пользователей' });
+  }
+});
+ 
+// Все брони (с фильтром по статусу)
+app.get('/api/admin/bookings', adminRequired, async (req, res) => {
+  try {
+    const { status } = req.query;
+    const where = status && status !== 'all' ? 'WHERE b.status = ?' : '';
+    const params = status && status !== 'all' ? [status] : [];
+    const rows = await dbAll(
+      `SELECT b.*, h.name AS hotel_name, h.destination AS hotel_destination,
+              u.username AS user_name, u.email AS user_email
+       FROM bookings b JOIN hotels h ON h.id = b.hotel_id JOIN users u ON u.id = b.user_id
+       ${where} ORDER BY b.created_at DESC`,
+      params
+    );
+    res.json({ bookings: rows });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка получения бронирований' });
+  }
+});
+ 
+app.get('/api/admin/bookings/:id', adminRequired, async (req, res) => {
+  try {
+    const row = await dbGet(
+      `SELECT b.*, h.name AS hotel_name, h.destination AS hotel_destination, h.city AS hotel_city,
+              u.username AS user_name, u.email AS user_email
+       FROM bookings b JOIN hotels h ON h.id = b.hotel_id JOIN users u ON u.id = b.user_id
+       WHERE b.id = ?`, [req.params.id]
+    );
+    if (!row) return res.status(404).json({ error: 'Бронирование не найдено' });
+    res.json({ booking: row });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка получения бронирования' });
+  }
+});
+ 
+// Смена статуса брони (pending | paid | cancelled)
+app.patch('/api/admin/bookings/:id/status', adminRequired, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const allowed = ['pending', 'paid', 'cancelled'];
+    if (!allowed.includes(status)) return res.status(400).json({ error: 'Недопустимый статус' });
+    const booking = await dbGet('SELECT id FROM bookings WHERE id = ?', [req.params.id]);
+    if (!booking) return res.status(404).json({ error: 'Бронирование не найдено' });
+    await dbRun('UPDATE bookings SET status = ? WHERE id = ?', [status, req.params.id]);
+    res.json({ success: true, booking: { id: Number(req.params.id), status } });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка обновления статуса' });
+  }
+});
+ 
+// Добавление отеля
+app.post('/api/admin/hotels', adminRequired, async (req, res) => {
+  try {
+    const h = req.body || {};
+    if (!h.name || !h.destination) return res.status(400).json({ error: 'Укажите название и направление' });
+    const slug = (h.slug && String(h.slug).trim()) ||
+      String(h.name).toLowerCase().replace(/[^a-z0-9а-я]+/gi, '-').replace(/^-+|-+$/g, '') + '-' + Math.random().toString(36).slice(2, 5);
+    const exists = await dbGet('SELECT id FROM hotels WHERE slug = ?', [slug]);
+    if (exists) return res.status(400).json({ error: 'Отель с таким slug уже существует' });
+    const r = await dbRun(
+      `INSERT INTO hotels (slug, name, destination, city, region, star_rating, base_price, tax_rate, service_fee, image, description)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+      [slug, h.name, h.destination, h.city || '', h.region || '',
+       Number(h.star_rating) || 0, Number(h.base_price) || 0,
+       Number(h.tax_rate) || 0, Number(h.service_fee) || 0, h.image || '', h.description || '']
+    );
+    res.json({ success: true, hotel: { id: r.lastID, slug } });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка добавления отеля' });
+  }
+});
+ 
+// Редактирование отеля
+app.put('/api/admin/hotels/:id', adminRequired, async (req, res) => {
+  try {
+    const h = req.body || {};
+    const existing = await dbGet('SELECT * FROM hotels WHERE id = ?', [req.params.id]);
+    if (!existing) return res.status(404).json({ error: 'Отель не найден' });
+    await dbRun(
+      `UPDATE hotels SET name=?, destination=?, city=?, region=?, star_rating=?, base_price=?, tax_rate=?, service_fee=?, image=?, description=? WHERE id=?`,
+      [h.name ?? existing.name, h.destination ?? existing.destination, h.city ?? existing.city,
+       h.region ?? existing.region, Number(h.star_rating ?? existing.star_rating),
+       Number(h.base_price ?? existing.base_price), Number(h.tax_rate ?? existing.tax_rate),
+       Number(h.service_fee ?? existing.service_fee), h.image ?? existing.image,
+       h.description ?? existing.description, req.params.id]
+    );
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка редактирования отеля' });
+  }
+});
+ 
+// Удаление отеля (запрещаем, если есть активные брони)
+app.delete('/api/admin/hotels/:id', adminRequired, async (req, res) => {
+  try {
+    const active = await dbGet(
+      "SELECT COUNT(*) AS c FROM bookings WHERE hotel_id = ? AND status != 'cancelled'", [req.params.id]);
+    if (active && active.c > 0) {
+      return res.status(409).json({ error: `Нельзя удалить: есть активных броней — ${active.c}. Сначала отмените их.` });
+    }
+    await dbRun('DELETE FROM hotels WHERE id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка удаления отеля' });
+  }
+});
+ 
 // ---------- AI-ЧАТБОТ (на данных сайта) ----------
 app.post('/api/chat', optionalAuth, async (req, res) => {
   try {
@@ -322,7 +529,7 @@ app.post('/api/chat', optionalAuth, async (req, res) => {
     res.status(500).json({ error: 'Ошибка чат-бота' });
   }
 });
-
+ 
 app.listen(PORT, () => {
   console.log(`🚀 Сервер запущен: http://localhost:${PORT}`);
   console.log('📊 БД: users.db (users, hotels, bookings)');

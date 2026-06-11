@@ -1096,3 +1096,372 @@ body {
     .popular-hotels { padding: 44px 0 6px; }
     .popular-hotels-grid { grid-template-columns: 1fr; gap: 18px; }
 }
+@media (max-width: 1024px) {
+  .header-container {
+    gap: 20px;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-bottom: 60px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    padding: 100px 24px 40px;
+  }
+
+  .hero-title {
+    font-size: 34px;
+  }
+
+  .hero-title span {
+    font-size: 28px;
+  }
+
+  .hero-cards {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 24px;
+    padding: 0 16px;
+  }
+
+  .hero-card {
+    width: calc(50% - 10px);
+    min-width: 260px;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .destinations-slider {
+    gap: 12px;
+  }
+
+  .destination-card {
+    width: calc(50% - 12px);
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+  }
+
+  .header-container {
+    height: auto;
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .logo {
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .main-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .nav-link,
+  .auth-nav-btn {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .navbar {
+    position: static;
+    padding: 12px 16px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .navbar .search-box {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 14px;
+  }
+
+  .navbar .search-box input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .navbar .profile-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-bottom: 32px;
+  }
+
+  .hero-bg,
+  .hero-overlay {
+    min-height: 520px;
+  }
+
+  .hero-content {
+    padding: 70px 16px 24px;
+    gap: 18px;
+  }
+
+  .hero-title {
+    font-size: 30px;
+    line-height: 1.15;
+  }
+
+  .hero-title span {
+    font-size: 22px;
+  }
+
+  .hero-btn {
+    width: 100%;
+    text-align: center;
+    align-self: stretch;
+    padding: 13px 20px;
+  }
+
+  .hero-cards {
+    position: static;
+    transform: none;
+    margin-top: 18px;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0 16px;
+  }
+
+  .hero-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero-card-img {
+    height: 160px;
+  }
+
+  .features {
+    padding: 70px 0 50px;
+  }
+
+  .features-title,
+  .destinations-title {
+    font-size: 24px;
+    margin-bottom: 28px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .feature-item {
+    padding: 14px 10px;
+  }
+
+  .destinations {
+    padding: 50px 0 60px;
+  }
+
+  .destinations-slider {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .slider-arrow {
+    display: none;
+  }
+
+  .destinations-grid {
+    flex-direction: column;
+    overflow: visible;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .destination-card {
+    width: 100%;
+  }
+
+  .destination-card-img {
+    height: 180px;
+  }
+
+  .show-more-wrapper {
+    margin-top: 26px;
+  }
+
+  .show-more-btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .popular-hotels {
+    padding: 44px 0 8px;
+  }
+
+  .popular-hotels-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .footer {
+    padding: 44px 0 28px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .footer-col h4 {
+    margin-bottom: 14px;
+  }
+
+  .footer-col ul li {
+    margin-bottom: 10px;
+  }
+
+  .ai-chatbot-wrapper {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .ai-chatbot-window {
+    width: calc(100vw - 28px);
+    max-height: calc(100vh - 120px);
+    right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 12px 14px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .nav-link,
+  .auth-nav-btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .navbar {
+    padding: 10px 14px 0;
+  }
+
+  .navbar .search-box {
+    border-radius: 18px;
+  }
+
+  .hero-bg,
+  .hero-overlay {
+    min-height: 460px;
+  }
+
+  .hero-content {
+    padding: 56px 14px 20px;
+  }
+
+  .hero-title {
+    font-size: 26px;
+  }
+
+  .hero-title span {
+    font-size: 18px;
+  }
+
+  .hero-btn {
+    font-size: 15px;
+    padding: 12px 18px;
+  }
+
+  .hero-card-body {
+    padding: 16px;
+  }
+
+  .hero-card-body h3,
+  .destination-card-body h3,
+  .popular-card-body h3 {
+    font-size: 16px;
+  }
+
+  .hero-card-body p,
+  .destination-card-body p,
+  .popular-card-loc {
+    font-size: 13px;
+  }
+
+  .features-title,
+  .destinations-title {
+    font-size: 22px;
+  }
+
+  .feature-item h3 {
+    font-size: 15px;
+  }
+
+  .feature-item p {
+    font-size: 13px;
+  }
+
+  .destination-card-body,
+  .popular-card-body {
+    padding: 18px;
+  }
+
+  .show-more-btn {
+    max-width: 100%;
+  }
+
+  .ai-chatbot-toggle {
+    width: 56px;
+    height: 56px;
+  }
+
+  .ai-chatbot-window {
+    width: calc(100vw - 20px);
+    right: -6px;
+    bottom: 72px;
+    border-radius: 16px;
+  }
+
+  .ai-chatbot-header,
+  .ai-chatbot-messages,
+  .ai-chatbot-quick-actions,
+  .ai-chatbot-input-form {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
